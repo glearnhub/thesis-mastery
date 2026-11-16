@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Thesis Mastery</title>
+  <meta name="description" content="Practise your thesis defence questions with AI feedback and track your mastery." />
+  <link rel="icon" type="image/png" href="assets/logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ["Inter", "system-ui", "sans-serif"] },
+          colors: {
+            brand: { 50: "#F5F3FF", 100: "#EDE9FE", 200: "#DDD6FE", 300: "#C4B5FD", 400: "#A78BFA",
+                     500: "#8B5CF6", 600: "#7C3AED", 700: "#6D28D9", 800: "#5B21B6", 900: "#4C1D95" },
+          },
+          boxShadow: { card: "0 1px 2px rgba(15,23,42,.04), 0 4px 16px rgba(76,29,149,.06)" },
+        },
+      },
+    };
+  </script>
+</head>
+<body class="bg-slate-50 font-sans text-slate-800 antialiased">
+
+  <!-- Loading screen (styled in plain CSS so it shows before Tailwind loads) -->
+  <div id="loader" role="status" aria-live="polite">
+    <div class="loader-inner">
+      <img src="assets/logo.png" alt="Thesis Mastery logo" class="loader-logo" />
+      <h1 class="loader-title">Thesis Mastery</h1>
+      <p class="loader-sub">Preparing your practice room</p>
+      <div class="loader-bar"><span></span></div>
+    </div>
+  </div>
+
+  <div id="app" class="min-h-screen"></div>
+  <div id="toasts" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2 w-[min(92vw,380px)]"></div>
+  <div id="modal-root"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/demo-api.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

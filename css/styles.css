@@ -1,0 +1,48 @@
+/* ---------- Loading screen ---------- */
+#loader {
+  position: fixed; inset: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: center;
+  background: radial-gradient(circle at 30% 20%, #8B5CF6 0%, #6D28D9 45%, #4C1D95 100%);
+  color: #fff; font-family: Inter, system-ui, sans-serif;
+  transition: opacity .5s ease, visibility .5s ease;
+}
+#loader.hidden-loader { opacity: 0; visibility: hidden; }
+.loader-inner { text-align: center; padding: 24px; }
+.loader-logo {
+  width: 132px; height: 132px; border-radius: 50%;
+  box-shadow: 0 0 0 8px rgba(255,255,255,.12), 0 20px 50px rgba(0,0,0,.25);
+  animation: loader-pulse 1.8s ease-in-out infinite;
+}
+.loader-title { margin: 22px 0 4px; font-size: 30px; font-weight: 800; letter-spacing: -.02em; }
+.loader-sub { margin: 0 0 22px; opacity: .8; font-size: 14px; }
+.loader-bar { width: 200px; height: 6px; margin: 0 auto; border-radius: 99px; background: rgba(255,255,255,.2); overflow: hidden; }
+.loader-bar span { display: block; width: 40%; height: 100%; border-radius: 99px; background: #fff; animation: loader-slide 1.2s ease-in-out infinite; }
+@keyframes loader-pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+@keyframes loader-slide { 0% { transform: translateX(-110%); } 100% { transform: translateX(260%); } }
+
+/* ---------- Small utilities Tailwind's CDN does not cover nicely ---------- */
+.view-enter { animation: view-in .25s ease; }
+@keyframes view-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+.spinner {
+  display: inline-block; width: 16px; height: 16px; border-radius: 50%;
+  border: 2px solid currentColor; border-right-color: transparent;
+  animation: spin .7s linear infinite; vertical-align: -3px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.progress-track { height: 8px; border-radius: 99px; background: #EDE9FE; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, #8B5CF6, #6D28D9); transition: width .6s ease; }
+
+.prose-answer { white-space: pre-wrap; line-height: 1.65; }
+textarea.answer-box { min-height: 220px; resize: vertical; line-height: 1.6; }
+
+.nav-link.active { background: #EDE9FE; color: #5B21B6; font-weight: 600; }
+.nav-link.active svg { color: #6D28D9; }
+
+details > summary { cursor: pointer; list-style: none; }
+details > summary::-webkit-details-marker { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}

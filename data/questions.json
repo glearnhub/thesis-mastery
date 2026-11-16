@@ -1,0 +1,2002 @@
+[
+ {
+  "number": 1,
+  "category": "General non-tech",
+  "level": "Basic",
+  "question_text": "Please introduce yourself and tell the panel briefly what your study is about.",
+  "expected_answer": "\"Thank you, Professor. My name is ... and I am presenting my MSc thesis, Machine Learning Survival Prediction for ICU Patients with Non-Communicable Diseases. The study asks a simple design question: when we build a survival model for ICU patients with an NCD, should we train it on all ICU patients, on NCD patients only, or start from the general model and adapt it to NCD patients through transfer learning? I compared the three approaches on MIMIC-IV, using Cox, random survival forest and XGBoost, all tested on the same held-out group of NCD patients.\"",
+  "tone": "Warm and composed. Smile, keep it under one minute and end on the question your study answers.",
+  "fallback_response": "\"I will keep the introduction short so we have more time for questions.\" (This one you should never fail; rehearse it until it is automatic.)",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 2,
+  "category": "General non-tech",
+  "level": "Basic",
+  "question_text": "What is the title of your thesis, and why did you word it that way?",
+  "expected_answer": "\"The title is Machine Learning Survival Prediction for ICU Patients with Non-Communicable Diseases. Each part names something I had to decide: machine learning is the family of methods, survival prediction is the outcome, so time to death rather than yes or no, and ICU patients with NCDs is the population. The comparison of general, disease-specific and transfer learning approaches is the core of the study.\"",
+  "tone": "Confident and plain. Walk through the title word by word.",
+  "fallback_response": "\"I chose each word to match a part of the design; if the panel feels a word is misleading, I am happy to revise it.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 3,
+  "category": "General non-tech",
+  "level": "Basic",
+  "question_text": "What motivated you to choose this topic?",
+  "expected_answer": "\"Thank you for the question. NCDs cause about three in four deaths not linked to COVID-19, and many of these patients end up in intensive care. When I read the ICU prediction literature, almost every model was trained on all ICU patients together. I wanted to know whether that habit actually serves NCD patients, because it affects how hospitals, including those in low- and middle-income countries, choose prediction tools.\"",
+  "tone": "Genuine and personal, but brief. One fact, one observation, one reason.",
+  "fallback_response": "Not applicable: this is about you. If your mind goes blank, say: \"Let me give the practical reason first,\" and state the gap.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 4,
+  "category": "General non-tech",
+  "level": "Basic",
+  "question_text": "In one sentence, what problem does your study address?",
+  "expected_answer": "\"It is not known whether a general, a disease-specific or a transfer learning survival model predicts survival best for ICU patients with NCDs, because no identified study had compared the three on the same held-out patients.\"",
+  "tone": "Crisp. Say it in one breath, then stop and let the panel follow up.",
+  "fallback_response": "\"Put simply, we did not know which way of building the model works best for these patients.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 5,
+  "category": "General non-tech",
+  "level": "Basic",
+  "question_text": "What were your main objective and your specific objectives?",
+  "expected_answer": "\"My main objective was to compare the predictive performance of general, disease-specific and transfer learning survival models for one-year survival among ICU patients with NCDs, using MIMIC-IV. The four specific objectives followed the order of the work: first construct the analysis dataset, then develop the Cox, random survival forest and XGBoost models under the three approaches, then evaluate them on the held-out group of NCD patients, and finally test whether the ranking holds for discharge home alive and make a recommendation.\"",
+  "tone": "Structured. Count them on your fingers if it helps you keep order.",
+  "fallback_response": "\"May I refer to my objectives slide so that I state them exactly as written?\" Asking to check is better than misquoting your own thesis.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 6,
+  "category": "General non-tech",
+  "level": "Basic",
+  "question_text": "Who benefits from your research?",
+  "expected_answer": "\"Thank you. Three groups mainly. Model developers and researchers get evidence on whether to train on all ICU patients, on NCD patients only, or to use transfer learning. Clinicians get survival estimates that fit NCD patients more closely. Hospitals and policy makers, especially where resources are limited, learn whether one adapted model is enough or whether separate models are worth the cost.\"",
+  "tone": "Practical and modest. Avoid claiming the study will change practice everywhere.",
+  "fallback_response": "\"The clearest beneficiaries are researchers who build these models; the clinical benefit would need further validation before I would claim it.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 7,
+  "category": "General non-tech",
+  "level": "Intermediate",
+  "question_text": "How did you identify the research gap?",
+  "expected_answer": "\"I read three bodies of work. First, general ICU mortality models, which are mostly trained on all patients. Second, disease-specific models for heart failure, sepsis, stroke and cancer, which report results only within their own disease group. Third, the small transfer learning literature, such as Xu and colleagues on eICU, which used single diagnoses and a yes-or-no outcome. None of them compared all three approaches for NCD patients with a survival outcome on a common held-out group. That intersection is the gap.\"",
+  "tone": "Methodical. Show that the gap came from reading, not from assumption.",
+  "fallback_response": "\"I cannot claim to have read every paper in the field, so I phrase it as no identified study, based on my search of the databases I listed in Chapter 2.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 8,
+  "category": "General non-tech",
+  "level": "Intermediate",
+  "question_text": "How did you select your literature, and how current is it?",
+  "expected_answer": "\"I searched for ICU mortality and survival prediction, disease-specific ICU models, transfer learning in clinical prediction, and survival methods. I kept peer-reviewed sources wherever possible and favoured work from 2021 onwards; in Chapter 1 about 85% of the references are from 2021 to 2026. The older references are the seminal method papers, such as Cox in 1972 and Ishwaran on random survival forests in 2008.\"",
+  "tone": "Factual. Give the proportion if you know it; numbers reassure examiners.",
+  "fallback_response": "\"I do not have the exact search counts with me, but the search strategy is described in Chapter 2 and I can send the full log after the defence.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 9,
+  "category": "General non-tech",
+  "level": "Intermediate",
+  "question_text": "What ethical issues did your study raise, and how did you deal with them?",
+  "expected_answer": "\"Thank you. The data are real patient records, even though they are de-identified. I completed the PhysioNet credentialing and training and signed the data use agreement. I kept all patient-level data and trained models on my own machine, never on GitHub, because models can memorise records. Only aggregate tables and figures were shared. I also report that survival predictions should support, not replace, clinical judgement, because a poor prognosis estimate could influence end-of-life decisions.\"",
+  "tone": "Serious and responsible. Ethics questions reward calm, concrete answers.",
+  "fallback_response": "\"I am not sure of the exact institutional procedure for that point; I followed the PhysioNet agreement and my university's guidance, and I would confirm the rest with the ethics office.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 10,
+  "category": "General non-tech",
+  "level": "Intermediate",
+  "question_text": "What is your main contribution to knowledge?",
+  "expected_answer": "\"The main contribution is a direct, fair comparison of general, disease-specific and transfer learning survival models for ICU patients with NCDs, all tested on the same held-out group. Earlier work either compared approaches for single diagnoses, used a yes-or-no outcome, or never tested a general model on the disease group. A second contribution is the reusable design itself: the same pipeline can be applied to any other patient group in MIMIC-IV.\"",
+  "tone": "Confident but not boastful. State it, then stop.",
+  "fallback_response": "\"If I had to reduce it to one line: we now have evidence, not assumption, on which approach to use for this group.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 11,
+  "category": "General non-tech",
+  "level": "Intermediate",
+  "question_text": "What was the biggest challenge you faced, and how did you overcome it?",
+  "expected_answer": "\"The biggest challenge was changing direction mid-way. I first built binary in-hospital mortality models, and my supervisor advised moving to survival analysis, which is a better fit for the question. I kept the cohort and predictor pipeline, relabelled the earlier outputs as legacy, and rebuilt the outcome and models around time to death. A practical challenge was the size of the MIMIC-IV event tables, which I handled by filtering them once with DuckDB and caching the result.\"",
+  "tone": "Honest and solution-focused. Examiners like hearing how you recovered, not how hard it was.",
+  "fallback_response": "\"There were several; the one that taught me most was ...\" Pick any real one rather than freezing.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 12,
+  "category": "General non-tech",
+  "level": "Intermediate",
+  "question_text": "How did your study change from the original proposal?",
+  "expected_answer": "\"Thank you for asking. The original proposal predicted in-hospital death as a yes-or-no outcome with logistic regression, random forest and XGBoost. After discussion with my supervisor, I moved to survival analysis with a one-year horizon, using Cox, random survival forest and XGBoost survival models. The research question, the cohort and the three approaches stayed the same; the outcome and methods changed. The earlier results are kept in the repository as legacy outputs and are not presented as the main findings.\"",
+  "tone": "Open. A change of direction is normal; present it as a deliberate improvement.",
+  "fallback_response": "\"The full history is in my research plan document; I can walk the panel through it if useful.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 13,
+  "category": "General non-tech",
+  "level": "Intermediate",
+  "question_text": "What are the main limitations of your study?",
+  "expected_answer": "\"There are three I would highlight. MIMIC-IV comes from one hospital in Boston, so the findings may not transfer directly to other settings, including Kenya. The data are retrospective, so some predictors such as bilirubin, pH and lactate are missing for many patients. And two NCD groups, chronic respiratory disease and diabetes, are small. For each one I describe the mitigation in Section 1.8: full cohort reporting, a documented missing-data method, and results reported per NCD group.\"",
+  "tone": "Calm and non-defensive. Name the limitation, then the mitigation.",
+  "fallback_response": "\"Those are the ones I identified; if the panel sees another, I would welcome it and add it to the final version.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 14,
+  "category": "General non-tech",
+  "level": "Intermediate",
+  "question_text": "If you started this study again, what would you do differently?",
+  "expected_answer": "\"I would start with the survival framing from day one rather than moving to it later, which would have saved time. I would also plan external validation from the beginning, for example by applying for eICU access early, so the model could be tested on a second database.\"",
+  "tone": "Reflective and mature. Two concrete changes are enough.",
+  "fallback_response": "\"Honestly, I would need to think about that more carefully, but one thing I already know is ...\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 15,
+  "category": "General non-tech",
+  "level": "Intermediate",
+  "question_text": "How do your findings compare with previous studies?",
+  "expected_answer": "Tie your answer to your actual results. Structure: \"Thank you. Xu and colleagues found that transfer learning beat both diagnosis-specific and pooled models on eICU. My results [agree / partly agree / disagree] for NCD patients with a survival outcome: [state the ranking]. On the choice of method, Huang and colleagues found machine learning no better than Cox in cancer survival, and in my study [state whether Cox, random survival forest or XGBoost led].\"",
+  "tone": "Balanced. Agreeing with the literature is reassuring; disagreeing is fine if you explain why.",
+  "fallback_response": "\"I would need to check the exact figures in that paper before comparing directly, but in broad terms ...\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 16,
+  "category": "General non-tech",
+  "level": "Advanced",
+  "question_text": "How would you convince a sceptical policy maker that your findings matter?",
+  "expected_answer": "\"I would talk in terms of choices and cost. Every hospital that adopts a prediction tool must decide whether one general model is enough or whether NCD patients need their own. My study gives evidence for that decision. If a general or adapted model performs as well as a separate one, a health system saves the cost of building and maintaining extra models. If not, it knows where investment is justified.\"",
+  "tone": "Persuasive but grounded. Speak to their interests: money, staff time, patient safety.",
+  "fallback_response": "\"I am not a policy specialist, so I would frame the evidence and leave the policy decision to those who know the local system.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 17,
+  "category": "General non-tech",
+  "level": "Advanced",
+  "question_text": "How generalisable are your findings to Kenya or other African settings?",
+  "expected_answer": "\"Thank you, this is an important point. Directly, they are limited. MIMIC-IV reflects one US academic centre, with different patient mix, staffing and resources. What does transfer is the design and the question. A Kenyan hospital with electronic records could run the same comparison on its own patients. I report the cohort characteristics in full so readers can judge how close their population is.\"",
+  "tone": "Honest. Do not oversell; examiners respect a clear boundary.",
+  "fallback_response": "\"I do not have Kenyan ICU data to test this, which is exactly why I list it as a limitation and a direction for future work.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 18,
+  "category": "General non-tech",
+  "level": "Advanced",
+  "question_text": "What recommendations do you make, and to whom?",
+  "expected_answer": "Base this on your results. Structure: \"To model developers, I recommend [the winning approach] for NCD patients, because [the evidence]. To researchers, I recommend reporting performance separately for disease groups, not only for the whole ICU population. To hospitals, I recommend validating any model locally before use.\"",
+  "tone": "Decisive. Recommendations should sound like conclusions, not guesses.",
+  "fallback_response": "\"My recommendation is limited to what the evidence supports; beyond that I would call it a suggestion for future work.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 19,
+  "category": "General non-tech",
+  "level": "Advanced",
+  "question_text": "What future research would you suggest?",
+  "expected_answer": "\"First, external validation on a second database such as eICU, and ideally on African ICU data. Second, separate models for each NCD group once larger samples are available, especially for chronic respiratory disease and diabetes. Third, testing other transfer learning methods and deep learning survival models such as DeepSurv. Fourth, prospective evaluation to see whether the predictions change clinical decisions.\"",
+  "tone": "Forward-looking and specific.",
+  "fallback_response": "\"Beyond those I have listed, I would welcome the panel's suggestions.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 20,
+  "category": "General non-tech",
+  "level": "Advanced",
+  "question_text": "In one minute, what should this panel remember about your thesis?",
+  "expected_answer": "\"Three things. First, the question: whether ICU survival models for NCD patients should be general, disease-specific or transfer learning. Second, the design: three methods, three approaches, one common held-out group, so the comparison is fair. Third, the answer: [state your main finding in one sentence] and what it means for how such models should be built.\"",
+  "tone": "Strong close. Slow down and make eye contact with each examiner.",
+  "fallback_response": "Rehearse this. If you lose your place, say \"The key point is ...\" and give your main finding.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 21,
+  "category": "General tech",
+  "level": "Basic",
+  "question_text": "What programming language and tools did you use, and why?",
+  "expected_answer": "\"Thank you. I used Python, because it has mature libraries for every step. pandas and DuckDB handled the data, scikit-learn and scikit-survival or lifelines handled the models and survival metrics, and the xgboost library provided XGBoost. I used git for version control, and Word and LaTeX for the write-up.\"",
+  "tone": "Matter-of-fact. Name the tools you actually used, nothing more.",
+  "fallback_response": "\"I would need to check the exact version numbers, but they are pinned in requirements.txt in the repository.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 22,
+  "category": "General tech",
+  "level": "Basic",
+  "question_text": "In simple terms, what is machine learning?",
+  "expected_answer": "\"Machine learning is a way of building a model by letting an algorithm learn patterns from examples, instead of writing the rules by hand. In my case the examples are ICU stays, the inputs are measurements from the first 24 hours, and the model learns how those measurements relate to survival time.\"",
+  "tone": "Simple and friendly, as if explaining to a clinician.",
+  "fallback_response": "You will know this one. Keep it to two sentences and tie it to your data.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 23,
+  "category": "General tech",
+  "level": "Basic",
+  "question_text": "What is the difference between supervised and unsupervised learning? Which did you use?",
+  "expected_answer": "\"Supervised learning learns from examples where the answer is known, such as whether and when a patient died. Unsupervised learning looks for structure without an answer, for example clustering. My study is supervised, because every patient has a known survival time or censoring time.\"",
+  "tone": "Confident, short.",
+  "fallback_response": "\"Mine is supervised; I did not use unsupervised methods, so I would not want to go into detail on them.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 24,
+  "category": "General tech",
+  "level": "Basic",
+  "question_text": "What are training and test sets?",
+  "expected_answer": "\"The training set is the data the model learns from. The test set is kept aside and used once at the end to measure how well the model works on patients it has never seen. In my study the test set is the held-out group of NCD patients, 20% of all NCD patients, and every model is evaluated on exactly that group.\"",
+  "tone": "Clear and precise. Use your own term, held-out group of NCD patients.",
+  "fallback_response": "\"The key idea is that the test patients are never seen during training or tuning.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 25,
+  "category": "General tech",
+  "level": "Basic",
+  "question_text": "Why did you use an 80/20 split?",
+  "expected_answer": "\"An 80/20 split is common in MIMIC-based prediction studies. With about 30,000 NCD patients, 20% gives roughly 6,100 test patients, which is enough for stable estimates of the C-index and narrow confidence intervals, while leaving most of the data for training.\"",
+  "tone": "Reasoned. Show it was a choice with a reason, not a default.",
+  "fallback_response": "\"It is a convention; I did not test other ratios, but with this sample size the test set is large enough for precise estimates.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 26,
+  "category": "General tech",
+  "level": "Basic",
+  "question_text": "What is overfitting, and how did you guard against it?",
+  "expected_answer": "\"Overfitting is when a model learns the noise in the training data and performs worse on new data. I guarded against it in three ways: hyperparameters were tuned by 5-fold cross-validation on training data only, the tree models have limits such as depth and minimum leaf size, and the test set was used once at the end.\"",
+  "tone": "Steady. This is a standard question; answer it like one.",
+  "fallback_response": "\"The main safeguard is that the test set played no part in any choice I made.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 27,
+  "category": "General tech",
+  "level": "Basic",
+  "question_text": "What is underfitting?",
+  "expected_answer": "\"Underfitting is the opposite: the model is too simple to capture the real pattern, so it performs poorly even on the training data. A linear Cox model could underfit if the true relationships are strongly non-linear, which is one reason I also used the random survival forest and XGBoost.\"",
+  "tone": "Brief.",
+  "fallback_response": "Two sentences are enough here.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 28,
+  "category": "General tech",
+  "level": "Basic",
+  "question_text": "What is a feature or predictor, and how many did you use?",
+  "expected_answer": "\"A predictor is an input variable the model uses. I used 69, all taken from the first 24 hours of the ICU stay: age and sex, the minimum, maximum and mean of seven vital signs and fourteen laboratory tests, the lowest Glasgow Coma Scale score, total urine output, and whether the patient received invasive ventilation or a vasopressor.\"",
+  "tone": "Precise. Knowing your own numbers builds credibility.",
+  "fallback_response": "\"There are 69; I can show the full list from the appendix.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 29,
+  "category": "General tech",
+  "level": "Basic",
+  "question_text": "What is a hyperparameter? Give an example from your work.",
+  "expected_answer": "\"A hyperparameter is a setting chosen before training rather than learned from the data. Examples in my study are the number of trees and the minimum leaf size in the random survival forest, and the learning rate, tree depth and number of boosting rounds in XGBoost.\"",
+  "tone": "Plain.",
+  "fallback_response": "\"I would have to check the exact search ranges, but they are listed in the methodology chapter.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 30,
+  "category": "General tech",
+  "level": "Basic",
+  "question_text": "What is cross-validation?",
+  "expected_answer": "\"Cross-validation splits the training data into k parts, here five. The model is trained on four parts and checked on the fifth, and this rotates five times. The average score is used to choose hyperparameters, so the test set is never touched during tuning.\"",
+  "tone": "Clear, step by step.",
+  "fallback_response": "\"In short, it is a way to tune the model without looking at the test set.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 31,
+  "category": "General tech",
+  "level": "Basic",
+  "question_text": "What data preprocessing did you do?",
+  "expected_answer": "\"I selected adult first ICU stays, mapped diagnoses to NCD groups, and built the outcomes. For predictors, I took values from the first 24 hours, with a six-hour look-back for laboratory tests drawn in the emergency department. Implausible values outside ranges from the MIMIC Code Repository were treated as recording errors and removed. Fahrenheit temperatures were converted to Celsius. Then each variable was summarised as minimum, maximum and mean.\"",
+  "tone": "Organised. Follow the order of the pipeline.",
+  "fallback_response": "\"The full list of cleaning rules is in the code and the methodology chapter; I can point to the exact ranges.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 32,
+  "category": "General tech",
+  "level": "Basic",
+  "question_text": "How did you handle missing data?",
+  "expected_answer": "\"For the Cox model and the random survival forest, I used median imputation, with medians calculated from training data only, plus a missing indicator for each predictor with gaps. XGBoost handles missing values itself by learning which branch to send them down. This follows evidence that median imputation performs about as well as complex methods when key predictors such as age are complete.\"",
+  "tone": "Confident. Mention that medians came from training data only.",
+  "fallback_response": "\"The reasoning and the supporting studies are in Section 3 on missing data; I chose a simple, documented method on purpose.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 33,
+  "category": "General tech",
+  "level": "Basic",
+  "question_text": "What is feature scaling, and did you need it?",
+  "expected_answer": "\"Scaling puts variables on a similar range, for example by standardising them. Tree models such as the random survival forest and XGBoost do not need it, because they split on thresholds. For the Cox model, scaling helps the penalised fitting and makes coefficients comparable, so I standardised predictors using training data statistics.\"",
+  "tone": "Brief. If you did not scale for Cox, say so honestly.",
+  "fallback_response": "\"Tree models do not need scaling; for Cox I would need to check whether standardisation was applied before the penalty.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 34,
+  "category": "General tech",
+  "level": "Basic",
+  "question_text": "What is a random seed, and why does it matter?",
+  "expected_answer": "\"A random seed fixes the starting point of random processes such as the data split, bootstrap samples and tree building, so that running the code again gives the same results. I used seed 42 throughout, set in one configuration file.\"",
+  "tone": "Light. This is a quick question.",
+  "fallback_response": "Short answer; nothing to fear here.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 35,
+  "category": "General tech",
+  "level": "Basic",
+  "question_text": "What hardware did you use, and how long did training take?",
+  "expected_answer": "\"I worked on a personal Windows computer. Extracting the predictors from the large chartevents and labevents tables was the slowest step, so I filtered them once and cached the result. Among the models, the random survival forest took longest to train; the Cox model was fastest.\"",
+  "tone": "Factual and relaxed.",
+  "fallback_response": "\"I did not record exact times for every model, but I can give approximate figures from the logs.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 36,
+  "category": "General tech",
+  "level": "Basic",
+  "question_text": "How did you manage your code and versions?",
+  "expected_answer": "\"I used git, with a commit for each step of the pipeline. Patient data, processed datasets and trained models are excluded from the repository by the gitignore file, in line with the PhysioNet data use agreement. Only code, aggregate tables and figures are committed.\"",
+  "tone": "Professional.",
+  "fallback_response": "\"The repository history shows every change and when it was made.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 37,
+  "category": "General tech",
+  "level": "Basic",
+  "question_text": "Can another researcher reproduce your results?",
+  "expected_answer": "\"Yes, provided they have PhysioNet access. MIMIC-IV v3.1 is freely available to credentialed researchers, a script checks every downloaded file against the official SHA256 checksums, and the pipeline runs in a fixed order with a fixed random seed. The README lists the commands.\"",
+  "tone": "Confident. Reproducibility is a strength of your study.",
+  "fallback_response": "\"Exact numbers may differ very slightly across library versions, which is why the versions are recorded.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 38,
+  "category": "General tech",
+  "level": "Basic",
+  "question_text": "What is a baseline model, and what was yours?",
+  "expected_answer": "\"A baseline is a simple reference model that more complex models should beat. In my study the Cox proportional hazards model is the natural baseline, because it is the standard method for survival data. The general approach also acts as a baseline for the disease-specific and transfer learning approaches.\"",
+  "tone": "Clear.",
+  "fallback_response": "\"My main reference point was the Cox general model; I did not include a severity score such as SOFA as a separate baseline.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 39,
+  "category": "General tech",
+  "level": "Basic",
+  "question_text": "What is data leakage, and how did you avoid it?",
+  "expected_answer": "\"Leakage is when information that would not be available at prediction time gets into training, which makes results look better than they are. I avoided it by using only data from the first 24 hours as predictors, never using diagnosis codes as predictors because they are assigned at discharge, keeping one stay per patient so no patient is in both sets, and computing imputation medians and tuning only on training data.\"",
+  "tone": "Thorough. This is a favourite examiner question; take your time.",
+  "fallback_response": "\"Those are the safeguards I built in; if the panel sees another path for leakage, I would like to check it.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 40,
+  "category": "General tech",
+  "level": "Basic",
+  "question_text": "What is class imbalance, and was it a problem in your study?",
+  "expected_answer": "\"Class imbalance is when one outcome is much rarer than the other. About 25% of all patients and 22.8% of NCD patients died within a year, so it is moderate. Survival models also use the time information from censored patients, which softens the problem, and I used stratified splitting so the test set has the same death rate.\"",
+  "tone": "Measured.",
+  "fallback_response": "\"It was moderate, not severe, so I did not use resampling methods.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 41,
+  "category": "General tech",
+  "level": "Basic",
+  "question_text": "What is a decision tree?",
+  "expected_answer": "\"A decision tree splits patients step by step on questions such as whether lactate is above a threshold, until it reaches groups with similar outcomes. On its own it is unstable, but it is the building block of the random survival forest and XGBoost.\"",
+  "tone": "Simple.",
+  "fallback_response": "Two sentences are enough.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 42,
+  "category": "General tech",
+  "level": "Basic",
+  "question_text": "What is a random forest?",
+  "expected_answer": "\"A random forest builds many decision trees, each on a bootstrap sample of patients and a random subset of predictors, and averages their predictions. The averaging reduces variance. The random survival forest applies this idea to censored survival data.\"",
+  "tone": "Plain.",
+  "fallback_response": "Keep it short; the survival version is covered elsewhere.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 43,
+  "category": "General tech",
+  "level": "Basic",
+  "question_text": "What is gradient boosting, and what is XGBoost?",
+  "expected_answer": "\"Gradient boosting builds trees one after another, with each new tree correcting the errors of the trees before it. XGBoost is an efficient implementation with regularisation and built-in handling of missing values. It also supports survival objectives, which is what I used.\"",
+  "tone": "Clear.",
+  "fallback_response": "\"The key difference from a random forest is that trees are built in sequence, not independently.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 44,
+  "category": "General tech",
+  "level": "Basic",
+  "question_text": "What is logistic regression, and why did your earlier analysis use it?",
+  "expected_answer": "\"Logistic regression models the probability of a yes-or-no outcome as a function of the predictors. My earlier, now legacy, analysis predicted in-hospital death, so logistic regression was the natural linear baseline. In the survival study the Cox model takes that role.\"",
+  "tone": "Brief, and make clear the legacy work is not the main analysis.",
+  "fallback_response": "\"That analysis is superseded; the main results are the survival models.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 45,
+  "category": "General tech",
+  "level": "Basic",
+  "question_text": "What is the difference between accuracy and AUC?",
+  "expected_answer": "\"Accuracy is the share of correct yes-or-no predictions at one threshold, and it can look good when one outcome is rare. AUC measures how well the model ranks patients who have the event above those who do not, across all thresholds. For survival I use the C-index, which is the survival version of that ranking idea, and time-dependent AUC.\"",
+  "tone": "Clear and connected to your metrics.",
+  "fallback_response": "\"The short answer is that AUC is about ranking, accuracy is about a single cut-off.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 46,
+  "category": "General tech",
+  "level": "Intermediate",
+  "question_text": "Why did you choose these three methods and not others?",
+  "expected_answer": "\"Thank you. The three cover the main families. Cox is the standard statistical model for survival data and is interpretable. The random survival forest is a well-established machine learning method for censored data. XGBoost is the method that most often performs best in recent ICU prediction studies, and it supports survival objectives. Together they let me check whether the ranking of the three approaches depends on the method.\"",
+  "tone": "Reasoned. Show the choice covers a range, not a random pick.",
+  "fallback_response": "\"There are other options, such as DeepSurv; I list them as future work because the study's focus is the comparison of approaches, not of every method.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 47,
+  "category": "General tech",
+  "level": "Intermediate",
+  "question_text": "Why did you not use deep learning?",
+  "expected_answer": "\"Two reasons. My predictors are tabular summaries, where tree-based methods usually perform as well as deep learning, and deep learning makes transfer learning and interpretation harder to do fairly across all three approaches. I note deep survival models such as DeepSurv as future work; a 2026 comparison found it competitive on MIMIC-IV.\"",
+  "tone": "Calm. Not using a method is a valid design choice when explained.",
+  "fallback_response": "\"It was a scope decision; I would be glad to extend the study in that direction.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 48,
+  "category": "General tech",
+  "level": "Intermediate",
+  "question_text": "How did you tune the hyperparameters?",
+  "expected_answer": "\"I used randomised search with 5-fold cross-validation on the training data only, choosing the settings with the best average C-index. For transfer learning, the general model was refitted without each validation fold during tuning, so that no validation patient had influenced the general model being adapted.\"",
+  "tone": "Precise. The refitting detail shows care; mention it.",
+  "fallback_response": "\"The exact grids are in the appendix; I can read them out if the panel wishes.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 49,
+  "category": "General tech",
+  "level": "Intermediate",
+  "question_text": "How do you know you did not overfit to the test set?",
+  "expected_answer": "\"The test set was used once, after every model and hyperparameter was fixed. All tuning used cross-validation inside the training data. I did not go back and change models after seeing test results.\"",
+  "tone": "Firm and direct.",
+  "fallback_response": "\"That discipline is the main protection; the commit history also shows the order in which things were done.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 50,
+  "category": "General tech",
+  "level": "Intermediate",
+  "question_text": "What is stratification, and why did you stratify your split?",
+  "expected_answer": "\"Stratification keeps the share of an outcome the same in both parts of the split. I stratified by one-year death so the training data and the held-out group of NCD patients have the same death rate. Otherwise random chance could give a test set with unusually many or few deaths.\"",
+  "tone": "Clear.",
+  "fallback_response": "Short answer.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 51,
+  "category": "General tech",
+  "level": "Intermediate",
+  "question_text": "Why does it matter that the split is at patient level?",
+  "expected_answer": "\"If one patient had several ICU stays in different sets, the model could recognise that patient rather than learn general patterns. I kept only the first ICU stay per patient, so each patient appears once, and the split cannot leak a patient between training and test.\"",
+  "tone": "Confident.",
+  "fallback_response": "\"Keeping one stay per patient makes this automatic.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 52,
+  "category": "General tech",
+  "level": "Intermediate",
+  "question_text": "What is calibration, and why is it as important as discrimination?",
+  "expected_answer": "\"Discrimination is whether the model ranks high-risk patients above low-risk ones. Calibration is whether the predicted probabilities match what actually happens: if the model says 30% risk of death within a year, about 30% of such patients should die. A model can rank well but give wrong absolute risks, which would mislead clinicians. So I report both.\"",
+  "tone": "Engaged. This shows you understand clinical use.",
+  "fallback_response": "\"Discrimination is about order; calibration is about the numbers being believable.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 53,
+  "category": "General tech",
+  "level": "Intermediate",
+  "question_text": "What is the Brier score?",
+  "expected_answer": "\"The Brier score is the mean squared difference between predicted probability and what happened, so lower is better. For survival data it is calculated at a time point with weighting for censoring, and the integrated Brier score averages it over the follow-up period. It reflects both discrimination and calibration.\"",
+  "tone": "Precise.",
+  "fallback_response": "\"The key point: lower is better, and it captures calibration as well as ranking.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 54,
+  "category": "General tech",
+  "level": "Intermediate",
+  "question_text": "How did you calculate confidence intervals?",
+  "expected_answer": "\"I used bootstrap resampling of the held-out group of NCD patients, 1,000 resamples, and took the 2.5th and 97.5th percentiles of each metric. The bootstrap does not assume a particular distribution for the C-index or the Brier score.\"",
+  "tone": "Calm, technical.",
+  "fallback_response": "\"If the panel prefers an analytic interval, I could add one, but the bootstrap is the usual choice for these metrics.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 55,
+  "category": "General tech",
+  "level": "Intermediate",
+  "question_text": "How did you test whether one approach is significantly better than another?",
+  "expected_answer": "\"I bootstrapped the difference in C-index between paired approaches on the same test patients. Because every model predicts for the same patients, the comparison is paired. If the 95% interval of the difference excludes zero, the difference is statistically significant.\"",
+  "tone": "Clear. Mention that the comparison is paired.",
+  "fallback_response": "\"I used the paired bootstrap; I would need to check whether a formal test for comparing C-indices would give a different result.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 56,
+  "category": "General tech",
+  "level": "Intermediate",
+  "question_text": "What is the bias-variance trade-off?",
+  "expected_answer": "\"Simple models have high bias, they miss real patterns, but low variance. Flexible models have low bias but can vary a lot with the training sample. Good models balance the two. The disease-specific approach is a good example: it may reduce bias for NCD patients, but with fewer patients it has higher variance. Transfer learning tries to get both.\"",
+  "tone": "Thoughtful. Linking it to your approaches is a strong move.",
+  "fallback_response": "\"In my study it appears as the trade-off between data relevance and data quantity.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 57,
+  "category": "General tech",
+  "level": "Intermediate",
+  "question_text": "How did you check the quality of the data?",
+  "expected_answer": "\"I verified every downloaded file against the PhysioNet checksums, removed physiologically implausible values, checked missingness for all 69 predictors, and compared the cohort characteristics with published MIMIC-IV descriptions. The exploratory analysis, including Kaplan-Meier curves, was also a check that the outcomes behaved sensibly.\"",
+  "tone": "Organised.",
+  "fallback_response": "\"Those were the main checks; I did not do a formal audit against original charts, which is not possible with de-identified data.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 58,
+  "category": "General tech",
+  "level": "Intermediate",
+  "question_text": "What is a sensitivity analysis, and why did you do one?",
+  "expected_answer": "\"A sensitivity analysis repeats the main analysis under a different reasonable assumption to see whether the conclusion holds. My main analysis defines NCD patients by principal diagnosis. The sensitivity analysis widens it to an NCD among the first three diagnoses, which gives 40,733 patients instead of 30,467. If the ranking holds under both, the conclusion does not depend on one definition.\"",
+  "tone": "Confident.",
+  "fallback_response": "\"The purpose is to show the result is not an artefact of one definition.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 59,
+  "category": "General tech",
+  "level": "Intermediate",
+  "question_text": "How did you choose your predictors?",
+  "expected_answer": "\"I chose variables that are routinely measured in the first 24 hours of nearly every ICU stay and are used in severity scores and in earlier MIMIC studies: vital signs, common laboratory tests, the Glasgow Coma Scale, urine output, ventilation and vasopressor use, plus age and sex. Item codes followed the MIMIC Code Repository.\"",
+  "tone": "Reasoned.",
+  "fallback_response": "\"The selection was based on clinical relevance and availability, not on testing every possible variable.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 60,
+  "category": "General tech",
+  "level": "Intermediate",
+  "question_text": "Why did you not do automated feature selection?",
+  "expected_answer": "\"The number of predictors, 69, is small relative to the number of patients, so there is little risk of having too many. Tree methods handle irrelevant predictors well, and the Cox model can be penalised. Also, using the same predictor set for all approaches keeps the comparison fair.\"",
+  "tone": "Calm.",
+  "fallback_response": "\"Feature selection could be added, but it would have to be repeated identically for every approach.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 61,
+  "category": "General tech",
+  "level": "Intermediate",
+  "question_text": "How interpretable are your models?",
+  "expected_answer": "\"The Cox model is directly interpretable through hazard ratios. The random survival forest and XGBoost are less transparent, but variable importance or SHAP values can show which predictors drive predictions. Since the aim was to compare approaches, interpretability was secondary, but I report the most important predictors.\"",
+  "tone": "Honest.",
+  "fallback_response": "\"I prioritised comparison over explanation; explanation is an obvious next step.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 62,
+  "category": "General tech",
+  "level": "Intermediate",
+  "question_text": "Did you explain individual predictions, for example with SHAP?",
+  "expected_answer": "If you did: \"Yes. I used SHAP values for the XGBoost models, which show how much each predictor pushed a patient's risk up or down.\" If you did not: \"Not in this study. SHAP would be a natural addition for clinical use, and earlier MIMIC-IV studies, such as Gu and Lu on cancer patients, used it.\"",
+  "tone": "Straightforward. Do not claim analysis you did not do.",
+  "fallback_response": "\"I did not include it in this version; I can see how it would strengthen the clinical side.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 63,
+  "category": "General tech",
+  "level": "Intermediate",
+  "question_text": "What is regularisation, and where did you use it?",
+  "expected_answer": "\"Regularisation adds a penalty for complexity to stop overfitting. In XGBoost it penalises large leaf weights. For transfer learning with Cox, a penalty keeps the adapted model close to the general model unless the NCD data clearly supports a change.\"",
+  "tone": "Technical but clear.",
+  "fallback_response": "\"The main use is in XGBoost and in the transfer learning adjustment.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 64,
+  "category": "General tech",
+  "level": "Intermediate",
+  "question_text": "What is external validation, and why did you not do it?",
+  "expected_answer": "\"External validation tests a model on data from a different source, such as another hospital. I did not do it because it was outside the scope and time of an MSc study, and access to a second database takes time. Because all approaches face the same limitation, the comparison between them is still fair. I list eICU validation as future work.\"",
+  "tone": "Honest, not apologetic.",
+  "fallback_response": "\"It is the most important next step, and I state that clearly in the limitations.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 65,
+  "category": "General tech",
+  "level": "Intermediate",
+  "question_text": "What is the difference between internal and external validation?",
+  "expected_answer": "\"Internal validation uses data from the same source, such as a held-out split or cross-validation; mine is internal. External validation uses data from another hospital, region or time period, which tests transportability.\"",
+  "tone": "Brief.",
+  "fallback_response": "Short answer.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 66,
+  "category": "General tech",
+  "level": "Intermediate",
+  "question_text": "How would your model be used in a hospital?",
+  "expected_answer": "\"At the end of the first 24 hours in the ICU, the system would pull the predictors from the electronic record, compute the survival curve, and show estimated survival at 28 days, 90 days and one year. It would support, not replace, clinical judgement. Before any use it would need local validation and approval.\"",
+  "tone": "Practical and cautious.",
+  "fallback_response": "\"Deployment was outside my scope, so this is how I would expect it to work rather than something I tested.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 67,
+  "category": "General tech",
+  "level": "Intermediate",
+  "question_text": "What are the computational costs of each method?",
+  "expected_answer": "\"The Cox model is cheapest to train and predict. XGBoost is fast because of its efficient implementation. The random survival forest is the most expensive in time and memory, and its saved models are large. For prediction at the bedside, all three are fast enough.\"",
+  "tone": "Factual.",
+  "fallback_response": "\"I can give the approximate training times from my logs.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 68,
+  "category": "General tech",
+  "level": "Intermediate",
+  "question_text": "How did you handle outliers and implausible values?",
+  "expected_answer": "\"I used plausible ranges from the MIMIC Code Repository, for example heart rate between 0 and 300, and removed values outside them as recording errors. Genuine extreme values within the range were kept, because in the ICU they are often real and informative.\"",
+  "tone": "Clear.",
+  "fallback_response": "\"The exact ranges are in features.py and the appendix.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 69,
+  "category": "General tech",
+  "level": "Intermediate",
+  "question_text": "How did you handle categorical variables?",
+  "expected_answer": "\"There are few. Sex was coded as 0 or 1, and ventilation and vasopressor use are binary indicators. The missing indicators are also binary. The rest are continuous.\"",
+  "tone": "Brief.",
+  "fallback_response": "Short answer.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 70,
+  "category": "General tech",
+  "level": "Intermediate",
+  "question_text": "Can your results show that a predictor causes death?",
+  "expected_answer": "\"No. This is a prediction study. A predictor can be useful for prediction without causing the outcome. For example, vasopressor use predicts death because it marks how sick a patient is, not because the drug causes death. Causal questions need a different design.\"",
+  "tone": "Firm and clear.",
+  "fallback_response": "\"My claims are about prediction only.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 71,
+  "category": "General tech",
+  "level": "Intermediate",
+  "question_text": "What is algorithmic bias, and did you check performance across groups?",
+  "expected_answer": "\"Bias here means a model performing worse for some groups. My main subgroup check is across the four NCD groups, because that is my research question. Checking performance by sex and by race or ethnicity would also be good practice; Cummins and colleagues did this for stroke on MIMIC-IV.\"",
+  "tone": "Responsible. If you did not check sex or race, say so.",
+  "fallback_response": "\"I reported subgroup results by NCD group; I did not report them by race, and I would add that in further work.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 72,
+  "category": "General tech",
+  "level": "Intermediate",
+  "question_text": "How did you make sure your code was correct?",
+  "expected_answer": "\"I built the pipeline in small steps with checks at each one: checksum verification of the raw files, counts printed at each cohort step and compared with expectations, checks that each stay appears once, and Kaplan-Meier curves to confirm the outcomes made sense. My supervisor also reviewed the intermediate results.\"",
+  "tone": "Calm.",
+  "fallback_response": "\"No code is guaranteed bug-free, but each step had a check I could verify.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 73,
+  "category": "General tech",
+  "level": "Intermediate",
+  "question_text": "What is the difference between statistical and clinical significance?",
+  "expected_answer": "\"A difference can be statistically significant because the sample is large, yet too small to matter for patients. With about 6,100 test patients, a C-index difference of 0.005 might be significant but not clinically useful. I interpret differences in terms of both.\"",
+  "tone": "Thoughtful.",
+  "fallback_response": "\"In short: significant does not always mean meaningful.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 74,
+  "category": "General tech",
+  "level": "Intermediate",
+  "question_text": "Why does a high AUC or C-index not guarantee a useful model?",
+  "expected_answer": "\"Because it only measures ranking. A model can rank well but be badly calibrated, or be good overall but poor for a subgroup, or be good on old data but not on new patients. That is why I also report calibration, the Brier score and per-group results.\"",
+  "tone": "Thoughtful.",
+  "fallback_response": "\"Ranking is necessary but not sufficient.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 75,
+  "category": "General tech",
+  "level": "Intermediate",
+  "question_text": "How did you document your pipeline?",
+  "expected_answer": "\"Each script starts with a description of what it does, its inputs and outputs. The README gives the order to run them. Results tables carry the definition and sample size in their headers, and the thesis methodology chapter describes every step.\"",
+  "tone": "Brief.",
+  "fallback_response": "Short answer.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 76,
+  "category": "General tech",
+  "level": "Advanced",
+  "question_text": "What are the main threats to the validity of your study?",
+  "expected_answer": "\"For internal validity, the main threats are missing data and how diagnoses were coded. For construct validity, the NCD definition depends on the principal diagnosis code, which may not always be the reason for ICU admission. For external validity, the single US centre. I addressed these with a documented missing-data method, a sensitivity analysis on the NCD definition, and full reporting of the cohort.\"",
+  "tone": "Structured. Use the validity types as headings in your head.",
+  "fallback_response": "\"Those are the threats I identified; I am open to others the panel sees.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 77,
+  "category": "General tech",
+  "level": "Advanced",
+  "question_text": "How would dataset shift affect your model over time?",
+  "expected_answer": "\"MIMIC-IV covers admissions from about 2008 to 2019. Treatments, coding practice and patient mix change, so a model trained then may lose accuracy later. Coding changed from ICD-9 to ICD-10 during the period, which I handled by mapping both. In use, the model would need monitoring and periodic recalibration.\"",
+  "tone": "Thoughtful.",
+  "fallback_response": "\"I did not test temporal validation, for example training on early years and testing on later years, but it would be a useful check.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 78,
+  "category": "General tech",
+  "level": "Advanced",
+  "question_text": "How would you monitor a deployed model?",
+  "expected_answer": "\"I would track discrimination and calibration on new patients over time, watch for changes in the distribution of predictors, and set thresholds for recalibration or retraining. Performance should also be tracked separately for each NCD group.\"",
+  "tone": "Practical.",
+  "fallback_response": "\"Monitoring was outside my scope, but that is the standard approach I would follow.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 79,
+  "category": "General tech",
+  "level": "Advanced",
+  "question_text": "What privacy risks remain with de-identified data, and how did you respect them?",
+  "expected_answer": "\"De-identified data can still be re-identified if combined with other sources, and models can memorise individual records. That is why I signed the data use agreement, kept data and models local, never tried to identify anyone, and shared only aggregate results with no small cell counts.\"",
+  "tone": "Serious.",
+  "fallback_response": "\"I followed the PhysioNet rules strictly; beyond that I would defer to the data protection office.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 80,
+  "category": "General tech",
+  "level": "Advanced",
+  "question_text": "Why did you not publish your trained models?",
+  "expected_answer": "\"Trained models, especially random forests, can store information about individual training patients, and the PhysioNet agreement does not allow redistributing the data. So the models stay local. Another credentialed researcher can retrain them from the code.\"",
+  "tone": "Confident.",
+  "fallback_response": "Short answer.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 81,
+  "category": "General tech",
+  "level": "Advanced",
+  "question_text": "Did you do a sample size calculation?",
+  "expected_answer": "\"I did not do a formal calculation before the study because the sample was fixed by the database. With 30,467 NCD patients and about 6,900 deaths within a year, the number of events per predictor is far above common minimums for 69 predictors. The smallest NCD groups are where sample size limits precision, which I report.\"",
+  "tone": "Honest and numerate.",
+  "fallback_response": "\"A formal calculation using current guidance for prediction models would be a good addition; I am confident the overall sample is adequate.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 82,
+  "category": "General tech",
+  "level": "Advanced",
+  "question_text": "You compare many models. How do you deal with multiple comparisons?",
+  "expected_answer": "\"The main comparison is three approaches within each method, which is a small number of planned comparisons. I focus on confidence intervals and the consistency of the ranking across methods rather than single p-values. A finding that appears for all three methods is much stronger than one significant difference.\"",
+  "tone": "Calm, statistical.",
+  "fallback_response": "\"I did not apply a formal correction; I would be cautious about any single borderline result.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 83,
+  "category": "General tech",
+  "level": "Advanced",
+  "question_text": "What does the no free lunch theorem mean for your study?",
+  "expected_answer": "\"It says no single algorithm is best for every problem. That is why I used three different methods, and why my conclusions are about this population and data, not a universal ranking.\"",
+  "tone": "Brief, thoughtful.",
+  "fallback_response": "\"The practical lesson is to test several methods, which I did.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 84,
+  "category": "General tech",
+  "level": "Advanced",
+  "question_text": "How sensitive are your results to the random seed?",
+  "expected_answer": "If you checked: \"I repeated the split and training with different seeds and the ranking held.\" If not: \"The test set is large, so bootstrap intervals already reflect sampling uncertainty. Repeating with several seeds would confirm stability, and I would add it.\"",
+  "tone": "Honest.",
+  "fallback_response": "\"I did not run multiple seeds; the confidence intervals are my main measure of uncertainty.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 85,
+  "category": "General tech",
+  "level": "Advanced",
+  "question_text": "What if the missing data are not missing at random?",
+  "expected_answer": "\"In the ICU they often are not. Lactate or bilirubin are ordered when a clinician is worried, so missingness itself carries information. The missing indicators let the Cox model and random survival forest use that information, and XGBoost learns it directly. Sisk and colleagues found missing indicators helped in many cases, though they can harm if missingness depends on the outcome.\"",
+  "tone": "Engaged. This is a strong point for you.",
+  "fallback_response": "\"I cannot fully rule out bias from informative missingness, but the indicators reduce it.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 86,
+  "category": "General tech",
+  "level": "Advanced",
+  "question_text": "Why median imputation instead of multiple imputation?",
+  "expected_answer": "\"Multiple imputation is more principled for inference, but for prediction it is hard to apply at deployment, because the outcome cannot be used to impute a new patient. Berkelmans and colleagues found median imputation non-inferior for prediction when key predictors are complete. It is also simple to reproduce.\"",
+  "tone": "Confident.",
+  "fallback_response": "\"It was a pragmatic choice; a comparison with multiple imputation could be a sensitivity analysis.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 87,
+  "category": "General tech",
+  "level": "Advanced",
+  "question_text": "Which reporting guideline did you follow?",
+  "expected_answer": "\"The TRIPOD guidance for prediction model studies, and its update for machine learning, TRIPOD+AI, guided what I report: data source, participants, outcome, predictors, missing data, model development and performance measures.\"",
+  "tone": "Confident if true. Only claim this if you checked the checklist.",
+  "fallback_response": "\"I followed its main items; I can add a completed checklist as an appendix.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 88,
+  "category": "General tech",
+  "level": "Advanced",
+  "question_text": "Would your model be regulated as a medical device?",
+  "expected_answer": "\"If used to inform individual patient care, yes, in many jurisdictions software that makes clinical predictions is regulated as a medical device. My study is research, not a product, so it would need validation, clinical evaluation and approval before use.\"",
+  "tone": "Measured.",
+  "fallback_response": "\"I am not an expert on regulation; I would expect it to need formal approval.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 89,
+  "category": "General tech",
+  "level": "Advanced",
+  "question_text": "What is automation bias, and how could it affect your model's use?",
+  "expected_answer": "\"Automation bias is when people trust a computer output too much and override their own judgement. A confident survival estimate could lead a team to give up on a patient too early. The model should be presented as one input among many, with its uncertainty shown.\"",
+  "tone": "Serious and reflective.",
+  "fallback_response": "\"It is a real risk, and it is why I stress decision support, not decision making.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 90,
+  "category": "General tech",
+  "level": "Advanced",
+  "question_text": "How would you explain one patient's prediction to a clinician?",
+  "expected_answer": "\"I would show the predicted survival curve, with estimates at 28 days, 90 days and one year, and the main factors that raised or lowered the risk, for example a high lactate or low Glasgow Coma Scale. For the Cox model these come from hazard ratios; for XGBoost from SHAP values.\"",
+  "tone": "Practical.",
+  "fallback_response": "\"I did not build that interface, but that is how I would present it.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 91,
+  "category": "General tech",
+  "level": "Advanced",
+  "question_text": "How would you update the model when new data arrive?",
+  "expected_answer": "\"Two options: recalibrate the existing model, which is cheap and fixes drift in average risk, or retrain on newer data. Interestingly, transfer learning is itself a way to update: you can take an existing model and adapt it to a new hospital with its own data.\"",
+  "tone": "Engaged.",
+  "fallback_response": "\"Updating strategy was not part of my study, but transfer learning gives a natural route.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 92,
+  "category": "General tech",
+  "level": "Advanced",
+  "question_text": "If a model is better on average but worse for one subgroup, which would you choose?",
+  "expected_answer": "\"It depends on the use. If the model is meant for NCD patients, performance in that group is what counts, which is the whole point of my study. More generally, I would report both and avoid a model that is clearly worse for a group it will be used on. Pfohl and colleagues showed this trade-off is real.\"",
+  "tone": "Thoughtful.",
+  "fallback_response": "\"There is no single answer; I would make the trade-off visible to decision makers.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 93,
+  "category": "General tech",
+  "level": "Advanced",
+  "question_text": "Is your study about prediction or explanation?",
+  "expected_answer": "\"Prediction. The aim is to estimate survival accurately for new patients and compare ways of building such models. I do not claim any predictor causes death, and hazard ratios from the Cox model should not be read as causal effects.\"",
+  "tone": "Clear.",
+  "fallback_response": "Short answer.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 94,
+  "category": "General tech",
+  "level": "Advanced",
+  "question_text": "What assumptions do your evaluation metrics make?",
+  "expected_answer": "\"The usual estimates of the C-index and time-dependent AUC assume censoring is independent of the outcome given the predictors. The censoring-weighted Brier score assumes the censoring model is correct. In my data most censoring is administrative at 365 days, which fits these assumptions well.\"",
+  "tone": "Precise.",
+  "fallback_response": "\"I would need to check the exact assumptions of each estimator, but the key one is independent censoring.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 95,
+  "category": "General tech",
+  "level": "Advanced",
+  "question_text": "Is a C-index of 0.80 really better than 0.78 in practice?",
+  "expected_answer": "\"Not necessarily. A small difference in ranking may not change any decision. To judge practical value I look at calibration and the size of the difference with its confidence interval. Decision curve analysis would show whether the difference changes net benefit at realistic thresholds.\"",
+  "tone": "Balanced.",
+  "fallback_response": "\"A small gain in C-index alone would not convince me to change models.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 96,
+  "category": "General tech",
+  "level": "Advanced",
+  "question_text": "What is decision curve analysis, and why did you not do it?",
+  "expected_answer": "\"Decision curve analysis estimates the net benefit of using a model to make decisions across a range of risk thresholds, compared with treating everyone or no one. I did not include it because my focus was comparing approaches on standard performance measures, and there is no single agreed decision for one-year ICU survival. It would be a good addition.\"",
+  "tone": "Honest.",
+  "fallback_response": "\"I know the idea but did not apply it; I would add it in follow-up work.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 97,
+  "category": "General tech",
+  "level": "Advanced",
+  "question_text": "How would your approach scale to many hospitals?",
+  "expected_answer": "\"Transfer learning suits this: one general model trained on a large pooled dataset, then adapted to each hospital or disease group. Where data cannot be shared, federated learning could train a general model across hospitals without moving patient records.\"",
+  "tone": "Forward-looking.",
+  "fallback_response": "\"That is beyond my study, but the design extends naturally.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 98,
+  "category": "General tech",
+  "level": "Advanced",
+  "question_text": "If your best model is a black box, is it acceptable for clinical use?",
+  "expected_answer": "\"It can be, if it is well validated, well calibrated, and its outputs are explained with methods such as SHAP. But if a transparent model like Cox performs about as well, I would prefer it, because clinicians can check its reasoning.\"",
+  "tone": "Balanced.",
+  "fallback_response": "\"I would favour the simpler model when performance is similar.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 99,
+  "category": "General tech",
+  "level": "Advanced",
+  "question_text": "What result would have made you reject your expectations?",
+  "expected_answer": "\"I expected transfer learning to perform at least as well as the other two approaches. If the disease-specific or general approach had clearly beaten it across all three methods, that would contradict my expectation, and I would report it as it is.\"",
+  "tone": "Honest. Show you are open to being wrong.",
+  "fallback_response": "\"A negative result is still a result; I would report it in the same way.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 100,
+  "category": "General tech",
+  "level": "Advanced",
+  "question_text": "What is the weakest point of your methodology, and how do you defend it?",
+  "expected_answer": "\"I would say the reliance on one database from one centre. I defend it in two ways. All approaches are compared on the same data, so the comparison between them is fair even if absolute performance may differ elsewhere. And the design is fully documented, so it can be repeated on other data.\"",
+  "tone": "Candid and confident. Choosing your own weakness shows maturity.",
+  "fallback_response": "\"Every study has a weakest point; I would rather name it myself.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 101,
+  "category": "Survival",
+  "level": "Basic",
+  "question_text": "What is survival analysis?",
+  "expected_answer": "\"Thank you. Survival analysis studies the time until an event happens, here death. Its key feature is that it can use patients whose follow-up ends before the event, called censored patients, instead of throwing them away or treating them as survivors.\"",
+  "tone": "Clear and simple.",
+  "fallback_response": "You will know this. Keep it to two sentences.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 102,
+  "category": "Survival",
+  "level": "Basic",
+  "question_text": "Why did you use survival analysis instead of predicting death as yes or no?",
+  "expected_answer": "\"A yes-or-no outcome ignores timing: a patient who dies on day 2 and one who dies on day 300 count the same. Survival analysis uses when the event happened and handles patients whose follow-up ended early. It also gives risk at any time point, so I can report survival at 28 days, 90 days and one year from one model. My supervisor recommended this change, and it fits the clinical question better.\"",
+  "tone": "Confident. This is central to your thesis.",
+  "fallback_response": "\"The core reason is that timing carries information a yes-or-no outcome throws away.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 103,
+  "category": "Survival",
+  "level": "Basic",
+  "question_text": "What is a non-communicable disease, and which ones did you include?",
+  "expected_answer": "\"NCDs are long-term conditions not passed from person to person. Following the WHO, I included the four main groups: cardiovascular diseases, cancers, chronic respiratory diseases and diabetes.\"",
+  "tone": "Plain.",
+  "fallback_response": "Short answer.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 104,
+  "category": "Survival",
+  "level": "Basic",
+  "question_text": "Why only those four groups?",
+  "expected_answer": "\"They are the four groups the WHO uses to track NCDs, and together they cause most NCD deaths: at least 19 million from cardiovascular disease in 2021, 10 million from cancer, 4 million from chronic respiratory disease and over 2 million from diabetes. Using the WHO definition makes the study comparable with global statistics.\"",
+  "tone": "Factual.",
+  "fallback_response": "\"Other chronic conditions, such as chronic kidney or liver disease, matter too, but I kept to the standard WHO definition.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 105,
+  "category": "Survival",
+  "level": "Basic",
+  "question_text": "What is MIMIC-IV?",
+  "expected_answer": "\"MIMIC-IV is a freely accessible, de-identified database from the electronic health record of the Beth Israel Deaconess Medical Center in Boston. It contains hospital and ICU data such as measurements, laboratory results, diagnoses, procedures and treatments. I used version 3.1.\"",
+  "tone": "Clear.",
+  "fallback_response": "Short answer.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 106,
+  "category": "Survival",
+  "level": "Basic",
+  "question_text": "How did you get access to MIMIC-IV?",
+  "expected_answer": "\"Through PhysioNet. I completed the required human research training, became a credentialed user and signed the data use agreement. After download, I checked every file against the official SHA256 checksums.\"",
+  "tone": "Simple.",
+  "fallback_response": "Short answer.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 107,
+  "category": "Survival",
+  "level": "Basic",
+  "question_text": "How many patients were in your study, and how many had an NCD?",
+  "expected_answer": "\"65,283 adult first ICU stays with recorded vital signs. Of these, 30,467, or 46.7%, had an NCD as the principal diagnosis: 24,848 cardiovascular, 4,192 cancer, 963 diabetes and 464 chronic respiratory. Under the wider sensitivity definition, 40,733 patients had an NCD.\"",
+  "tone": "Precise. Know these numbers by heart.",
+  "fallback_response": "\"May I check the cohort table so I give the exact numbers?\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 108,
+  "category": "Survival",
+  "level": "Basic",
+  "question_text": "Why only the first ICU stay?",
+  "expected_answer": "\"Using one stay per patient keeps observations independent, so no patient counts twice. It also stops the same patient appearing in both training and test data. The first stay is the natural choice because later stays depend on what happened in earlier ones.\"",
+  "tone": "Confident.",
+  "fallback_response": "Short answer.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 109,
+  "category": "Survival",
+  "level": "Basic",
+  "question_text": "Why only adults?",
+  "expected_answer": "\"Children have different physiology, normal ranges and causes of ICU admission, and the four NCD groups are mainly adult conditions. I included patients aged 18 and over at ICU admission.\"",
+  "tone": "Brief.",
+  "fallback_response": "Short answer.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 110,
+  "category": "Survival",
+  "level": "Basic",
+  "question_text": "Why did you exclude stays without recorded vital signs?",
+  "expected_answer": "\"Without any vital signs in the first 24 hours, there is almost nothing to predict from, and such stays are often data errors or very short stays. Excluding them keeps the input data meaningful.\"",
+  "tone": "Brief.",
+  "fallback_response": "\"I can give the exact number excluded from the pipeline log.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 111,
+  "category": "Survival",
+  "level": "Basic",
+  "question_text": "What is your primary outcome?",
+  "expected_answer": "\"Survival time up to one year: the number of days to death, censored at 365 days for patients not known to have died by then. In the data it is two columns, survival_days and the event indicator died_1yr.\"",
+  "tone": "Precise.",
+  "fallback_response": "Short answer.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 112,
+  "category": "Survival",
+  "level": "Basic",
+  "question_text": "Why a one-year horizon?",
+  "expected_answer": "\"Many deaths after ICU happen after discharge, so in-hospital death misses part of the picture. One year captures the longer effect of critical illness, especially for chronic disease. It also matches the follow-up that MIMIC-IV provides through linked death records.\"",
+  "tone": "Reasoned.",
+  "fallback_response": "\"Other horizons are possible; I also report 28-day and 90-day performance.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 113,
+  "category": "Survival",
+  "level": "Basic",
+  "question_text": "What is censoring?",
+  "expected_answer": "\"Censoring means we do not know the exact event time for a patient, only that they were event-free up to a certain time. In my study, patients not known to have died within a year are censored at 365 days.\"",
+  "tone": "Simple.",
+  "fallback_response": "Short answer.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 114,
+  "category": "Survival",
+  "level": "Basic",
+  "question_text": "What type of censoring is in your data?",
+  "expected_answer": "\"Right censoring, almost all of it administrative: every patient not known to have died is censored at exactly 365 days. That is the simplest kind, because the censoring time is set by the study design, not by patient characteristics.\"",
+  "tone": "Confident.",
+  "fallback_response": "Short answer.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 115,
+  "category": "Survival",
+  "level": "Basic",
+  "question_text": "What is your secondary outcome, and why did you include it?",
+  "expected_answer": "\"Discharge home alive, among patients who survive to hospital discharge. Survival is not the only thing that matters; whether a patient goes home reflects recovery and affects discharge planning. I use it to test whether the ranking of the three approaches holds for a different kind of outcome.\"",
+  "tone": "Clear.",
+  "fallback_response": "Short answer.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 116,
+  "category": "Survival",
+  "level": "Basic",
+  "question_text": "What are the survival function and the hazard function?",
+  "expected_answer": "\"The survival function gives the probability of still being alive at time t. The hazard function is the instantaneous risk of dying at time t, given the patient has survived until then. They are two views of the same thing; one can be calculated from the other.\"",
+  "tone": "Precise.",
+  "fallback_response": "\"In plain words, survival is the chance of being alive; hazard is the risk right now.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 117,
+  "category": "Survival",
+  "level": "Basic",
+  "question_text": "What is a Kaplan-Meier curve, and what did yours show?",
+  "expected_answer": "\"It is a non-parametric estimate of the survival function that accounts for censoring. My curves showed that NCD patients as a whole had slightly better one-year survival than non-NCD patients, 22.8% against 27.0% died. Within NCD groups, cancer patients did worst, with 46.7% dying within a year, and diabetes patients did best at 13.1%.\"",
+  "tone": "Clear and numerate.",
+  "fallback_response": "\"The curves are in the EDA chapter; may I point to the figure?\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 118,
+  "category": "Survival",
+  "level": "Basic",
+  "question_text": "What is a log-rank test, and what did it show?",
+  "expected_answer": "\"The log-rank test compares survival curves between groups. Each NCD group differed significantly from non-NCD patients: cardiovascular, cancer and diabetes with p below 0.001, and chronic respiratory with p of 0.006. The direction differed: cancer did worse, the others did better.\"",
+  "tone": "Factual.",
+  "fallback_response": "Short answer.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 119,
+  "category": "Survival",
+  "level": "Basic",
+  "question_text": "What is the Cox proportional hazards model, in simple terms?",
+  "expected_answer": "\"It models a patient's hazard as a baseline hazard over time multiplied by a factor that depends on their predictors. It does not need the baseline to have a particular shape, which made it the standard survival regression method after Cox introduced it in 1972.\"",
+  "tone": "Plain.",
+  "fallback_response": "\"The key idea is that predictors multiply the risk up or down.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 120,
+  "category": "Survival",
+  "level": "Basic",
+  "question_text": "What is a hazard ratio?",
+  "expected_answer": "\"A hazard ratio compares hazards between two groups or for a one-unit change in a predictor. A hazard ratio of 1.5 means a 50% higher instantaneous risk of death, assuming proportional hazards.\"",
+  "tone": "Simple.",
+  "fallback_response": "Short answer.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 121,
+  "category": "Survival",
+  "level": "Basic",
+  "question_text": "What is a random survival forest?",
+  "expected_answer": "\"It is the random forest adapted to censored data, introduced by Ishwaran and colleagues in 2008. Each tree is grown with survival splitting rules, and the forest combines the trees to give each patient a survival curve. It captures non-linear effects and interactions without having to specify them.\"",
+  "tone": "Clear.",
+  "fallback_response": "Short answer.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 122,
+  "category": "Survival",
+  "level": "Basic",
+  "question_text": "How does XGBoost handle survival data?",
+  "expected_answer": "\"XGBoost has survival objectives built in. The accelerated failure time objective, described by Barnwal and colleagues, models the logarithm of survival time and handles censored observations directly. XGBoost also has a Cox-type objective. I used [state which one], because [reason].\"",
+  "tone": "Precise. Know which objective you used.",
+  "fallback_response": "\"I would need to check the exact loss settings, but the objective is named in the code and in Chapter 3.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 123,
+  "category": "Survival",
+  "level": "Basic",
+  "question_text": "What is the general approach?",
+  "expected_answer": "\"The general model is trained on all ICU patients in the training data: non-NCD patients and the NCD training patients together. It is then tested on the held-out group of NCD patients.\"",
+  "tone": "Brief.",
+  "fallback_response": "Short answer.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 124,
+  "category": "Survival",
+  "level": "Basic",
+  "question_text": "What is the disease-specific approach?",
+  "expected_answer": "\"The disease-specific model is trained only on NCD patients in the training data, then tested on the same held-out group of NCD patients.\"",
+  "tone": "Brief.",
+  "fallback_response": "Short answer.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 125,
+  "category": "Survival",
+  "level": "Basic",
+  "question_text": "What is transfer learning in your study?",
+  "expected_answer": "\"Transfer learning starts from the general model and adjusts it using NCD training patients. The idea is to keep what the general model learnt from the large population while fitting the NCD group more closely.\"",
+  "tone": "Clear.",
+  "fallback_response": "Short answer.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 126,
+  "category": "Survival",
+  "level": "Basic",
+  "question_text": "What is the held-out group of NCD patients, and why is it the same for every model?",
+  "expected_answer": "\"It is a random 20% of NCD patients, stratified by the outcome, kept aside from all training and tuning. Every model, under every approach and method, is tested on exactly these patients. That is what makes the comparison fair: differences in results come from the approach, not from different test patients.\"",
+  "tone": "Firm. This is the core of your design.",
+  "fallback_response": "Short answer; never hesitate on this one.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 127,
+  "category": "Survival",
+  "level": "Basic",
+  "question_text": "What is the C-index?",
+  "expected_answer": "\"The concordance index is the share of comparable patient pairs where the model gives higher risk to the patient who died earlier. 0.5 is random, 1.0 is perfect. It is the survival version of the AUC.\"",
+  "tone": "Simple.",
+  "fallback_response": "Short answer.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 128,
+  "category": "Survival",
+  "level": "Basic",
+  "question_text": "What is time-dependent AUC, and why 28 days, 90 days and one year?",
+  "expected_answer": "\"Time-dependent AUC measures how well the model separates patients who die by a given time from those still alive at that time. I chose 28 days, 90 days and one year because they are standard clinical time points: short-term, medium-term and the full horizon of the study.\"",
+  "tone": "Clear.",
+  "fallback_response": "Short answer.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 129,
+  "category": "Survival",
+  "level": "Basic",
+  "question_text": "What is the integrated Brier score?",
+  "expected_answer": "\"It is the Brier score, the squared error between predicted survival probability and actual status, averaged over the follow-up period, with weights to handle censoring. Lower is better, and it reflects both discrimination and calibration.\"",
+  "tone": "Precise.",
+  "fallback_response": "Short answer.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 130,
+  "category": "Survival",
+  "level": "Basic",
+  "question_text": "Why did you use predictors from the first 24 hours only?",
+  "expected_answer": "\"The first 24 hours is a common and practical prediction point: enough data has been collected to judge how sick the patient is, and decisions about care are still being made. It also prevents later information, which could reflect the outcome, from leaking into the model.\"",
+  "tone": "Reasoned.",
+  "fallback_response": "Short answer.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 131,
+  "category": "Survival",
+  "level": "Intermediate",
+  "question_text": "How exactly did you identify NCD patients from diagnosis codes?",
+  "expected_answer": "\"MIMIC-IV uses both ICD-9 and ICD-10. I mapped both. For ICD-9: 390 to 459 for cardiovascular, 140 to 208 for cancer, 490 to 496 for chronic respiratory and 250 for diabetes. For ICD-10: I codes for cardiovascular, C codes for cancer, J40 to J47 for chronic respiratory, and E08 to E11 and E13 for diabetes.\"",
+  "tone": "Precise. Examiners may test one code range.",
+  "fallback_response": "\"The exact mapping is in the code and the appendix; I can show it.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 132,
+  "category": "Survival",
+  "level": "Intermediate",
+  "question_text": "What is the principal diagnosis in MIMIC-IV, and how reliable is it?",
+  "expected_answer": "\"It is the diagnosis with sequence number 1 for the hospital admission, assigned by coders for billing. It usually reflects the main reason for admission, but it is not always the reason for ICU admission. That is a known limitation, which is why I ran a sensitivity analysis using the first three diagnoses.\"",
+  "tone": "Honest.",
+  "fallback_response": "\"Coding accuracy cannot be checked against charts in de-identified data, so I treat it as a limitation.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 133,
+  "category": "Survival",
+  "level": "Intermediate",
+  "question_text": "Why use principal diagnosis in the main analysis and the first three in the sensitivity analysis?",
+  "expected_answer": "\"The principal diagnosis is the strictest definition: the NCD is the main problem. The first three diagnoses capture patients where an NCD is important but not first. If the ranking of approaches is the same under both, the conclusion does not depend on how strictly NCD is defined.\"",
+  "tone": "Confident.",
+  "fallback_response": "Short answer.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 134,
+  "category": "Survival",
+  "level": "Intermediate",
+  "question_text": "Diagnosis codes are assigned at discharge. Is that not leakage?",
+  "expected_answer": "\"Thank you, that is an important point. The codes define which group a patient belongs to; they are never used as predictors. So the model itself only uses the first 24 hours. In practice, a clinician would usually know at admission whether a patient has a major NCD, so the group is a reasonable proxy for what is known early.\"",
+  "tone": "Calm and direct. Do not get defensive.",
+  "fallback_response": "\"The codes select patients but never enter the model; I accept that real-time group assignment is approximate.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 135,
+  "category": "Survival",
+  "level": "Intermediate",
+  "question_text": "How were deaths after hospital discharge captured?",
+  "expected_answer": "\"MIMIC-IV fills the date of death from hospital records and from linked state death records, so deaths after discharge are included, up to a follow-up limit after the last hospital discharge, which the MIMIC-IV documentation sets at one year. That is why a one-year horizon fits the data.\"",
+  "tone": "Precise. Check the documentation before the defence.",
+  "fallback_response": "\"I would like to confirm the exact follow-up rule in the MIMIC-IV documentation rather than guess.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 136,
+  "category": "Survival",
+  "level": "Intermediate",
+  "question_text": "Are patients without a death record really alive at one year?",
+  "expected_answer": "\"Not certainly. They are not known to have died, so I treat them as censored at 365 days, not as known survivors. Some deaths, for example outside the state, may be missed, which could slightly underestimate mortality. That would affect all three approaches equally.\"",
+  "tone": "Honest.",
+  "fallback_response": "\"I treated them as censored, which is the standard approach given the data.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 137,
+  "category": "Survival",
+  "level": "Intermediate",
+  "question_text": "Cancer patients had very different survival. How did that affect your models?",
+  "expected_answer": "\"Yes, 46.7% of cancer patients died within a year, against 19.1% of cardiovascular patients. Because the disease-specific and transfer learning models pool all four NCD groups, I reported the C-index and calibration separately for each group, to check that overall performance does not hide poor results for cancer patients. [State what the per-group results showed.]\"",
+  "tone": "Engaged. This shows you thought about it in advance.",
+  "fallback_response": "\"The per-group results are in Chapter 4; I can turn to them.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 138,
+  "category": "Survival",
+  "level": "Intermediate",
+  "question_text": "Chronic respiratory disease and diabetes groups are small. How did you handle that?",
+  "expected_answer": "\"With 464 and 963 patients, I did not build separate models for them. They are part of the pooled NCD group. I report their results separately, but with wide confidence intervals, so I draw only cautious conclusions about them individually.\"",
+  "tone": "Honest.",
+  "fallback_response": "Short answer.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 139,
+  "category": "Survival",
+  "level": "Intermediate",
+  "question_text": "Why did NCD patients have lower mortality than non-NCD patients?",
+  "expected_answer": "\"The NCD group is dominated by cardiovascular patients, 24,848 of 30,467, and many of them are admitted after planned cardiac procedures, who tend to do well. Non-NCD patients include sepsis, trauma and other acute illnesses with high mortality. Cancer patients, by contrast, did much worse than non-NCD patients.\"",
+  "tone": "Thoughtful. Present the cardiac surgery point as a likely explanation, not a proven one.",
+  "fallback_response": "\"That is my interpretation; I did not separate planned from emergency admissions, so I would present it as a likely reason.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 140,
+  "category": "Survival",
+  "level": "Intermediate",
+  "question_text": "How did you check the proportional hazards assumption?",
+  "expected_answer": "\"I used Schoenfeld residuals for each fitted Cox model, with a test for each predictor and a global test. If residuals show a trend over time, the effect of that predictor is not constant. I report the results alongside the main findings.\"",
+  "tone": "Precise.",
+  "fallback_response": "\"The test results are in the appendix.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 141,
+  "category": "Survival",
+  "level": "Intermediate",
+  "question_text": "What if the proportional hazards assumption was violated?",
+  "expected_answer": "\"With large samples, small violations are almost always detected. For prediction, a mild violation mainly affects calibration over time, and the C-index is often still reasonable. Options include stratifying by the predictor or adding a time interaction. The random survival forest and XGBoost do not rely on this assumption, which is one reason to include them. [State what you found.]\"",
+  "tone": "Balanced.",
+  "fallback_response": "\"I report the violations openly; the non-Cox methods provide a check.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 142,
+  "category": "Survival",
+  "level": "Intermediate",
+  "question_text": "Why no transfer learning for the random survival forest?",
+  "expected_answer": "\"There is no standard way to continue training an already fitted random forest, because its trees are built independently. Xu and colleagues, the study my design follows most closely, applied transfer learning only to a linear model and XGBoost for the same reason. So I have eight models per analysis instead of nine.\"",
+  "tone": "Confident.",
+  "fallback_response": "Short answer.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 143,
+  "category": "Survival",
+  "level": "Intermediate",
+  "question_text": "How exactly did you do transfer learning for XGBoost?",
+  "expected_answer": "\"I took the fitted general XGBoost model and continued boosting: extra trees were added, trained only on NCD training patients. The number of extra trees was tuned by cross-validation. So the final model is the general trees plus a set of NCD-specific corrections.\"",
+  "tone": "Precise.",
+  "fallback_response": "Short answer.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 144,
+  "category": "Survival",
+  "level": "Intermediate",
+  "question_text": "How exactly did you do transfer learning for the Cox model?",
+  "expected_answer": "\"The general model's linear predictor is used as a fixed offset, and a penalised adjustment is fitted on NCD training patients. The penalty keeps the adjustment small unless the NCD data supports a change, and its strength is tuned by cross-validation. Simply restarting an ordinary Cox fit from the general coefficients would just converge to the disease-specific model.\"",
+  "tone": "Precise. The last sentence shows deep understanding.",
+  "fallback_response": "\"The formula is in Chapter 3; may I write it on the board?\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 145,
+  "category": "Survival",
+  "level": "Intermediate",
+  "question_text": "What is negative transfer?",
+  "expected_answer": "\"Negative transfer is when starting from the general model makes performance worse than training on the target group alone, because the source population differs too much. My design detects it directly: if transfer learning performs worse than the disease-specific model on the held-out group, that is negative transfer.\"",
+  "tone": "Clear.",
+  "fallback_response": "Short answer.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 146,
+  "category": "Survival",
+  "level": "Intermediate",
+  "question_text": "How did you make sure the transfer learning model never saw test patients?",
+  "expected_answer": "\"The general model is trained only on training data, which excludes the held-out group of NCD patients. During tuning, the general model was refitted without each validation fold, so no validation patient influenced the model being adapted. The test patients are untouched until the final evaluation.\"",
+  "tone": "Firm.",
+  "fallback_response": "Short answer.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 147,
+  "category": "Survival",
+  "level": "Intermediate",
+  "question_text": "The general model includes NCD training patients. Is the comparison still fair?",
+  "expected_answer": "\"Yes. That is what a general model is in practice: all ICU patients, NCD patients included. What matters is that no model sees the held-out group of NCD patients. The question is whether adding non-NCD patients helps or hurts, and that is exactly what the comparison tests.\"",
+  "tone": "Confident.",
+  "fallback_response": "Short answer.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 148,
+  "category": "Survival",
+  "level": "Intermediate",
+  "question_text": "How did you tune the random survival forest?",
+  "expected_answer": "\"With randomised search and 5-fold cross-validation on training data, varying the number of trees, the minimum number of patients in a leaf, and the number of predictors tried at each split, and choosing by mean C-index.\"",
+  "tone": "Brief.",
+  "fallback_response": "\"The exact grid is in the appendix.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 149,
+  "category": "Survival",
+  "level": "Intermediate",
+  "question_text": "Which XGBoost survival objective did you use, and why?",
+  "expected_answer": "\"[State: accelerated failure time or Cox.] The accelerated failure time objective models log survival time and gives predicted times directly; the Cox objective gives relative risk like the Cox model. I chose [the one used] because [reason, for example it allows continued boosting for transfer learning and handles censoring natively].\"",
+  "tone": "Precise.",
+  "fallback_response": "\"I would need to check the code to give the exact parameter settings.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 150,
+  "category": "Survival",
+  "level": "Intermediate",
+  "question_text": "How did you handle tied event times?",
+  "expected_answer": "\"Survival time is measured in days, so ties are common. The Cox implementations handle ties with standard approximations, such as Efron's method, and the C-index treats tied pairs according to the usual rules.\"",
+  "tone": "Technical.",
+  "fallback_response": "\"I used the library defaults; I can check which tie method was applied.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 151,
+  "category": "Survival",
+  "level": "Intermediate",
+  "question_text": "Which C-index did you use, Harrell's or Uno's?",
+  "expected_answer": "\"[State which.] Harrell's C is the classic version. Uno's C uses censoring weights and is less biased when censoring is heavy. With 75% of patients censored, Uno's C is a sensible check.\"",
+  "tone": "Precise.",
+  "fallback_response": "\"If I reported only one, I would add the other as a second check.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 152,
+  "category": "Survival",
+  "level": "Intermediate",
+  "question_text": "How did you assess calibration for survival models?",
+  "expected_answer": "\"At fixed time points, such as one year, I grouped patients by predicted risk and compared the predicted probability of death with the Kaplan-Meier estimate in each group, shown as a calibration plot. The integrated Brier score adds an overall measure.\"",
+  "tone": "Clear.",
+  "fallback_response": "Short answer.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 153,
+  "category": "Survival",
+  "level": "Intermediate",
+  "question_text": "How did you compare the three approaches statistically?",
+  "expected_answer": "\"Every model predicts for the same test patients, so I used a paired bootstrap: 1,000 resamples of the held-out group, computing the difference in C-index and integrated Brier score between approaches in each resample. The 95% interval of the difference tells whether it is significant.\"",
+  "tone": "Confident.",
+  "fallback_response": "Short answer.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 154,
+  "category": "Survival",
+  "level": "Intermediate",
+  "question_text": "What did your exploratory analysis of the outcomes show?",
+  "expected_answer": "\"Of all 65,283 patients, 25% died within a year, 18.2% within 90 days and 13.5% within 28 days; 10.8% died in hospital. Among survivors to discharge, 58.8% went home. For NCD patients the figures were 22.8% within a year and 62.9% discharged home.\"",
+  "tone": "Numerate and calm.",
+  "fallback_response": "\"The outcome table is in the EDA chapter; may I refer to it?\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 155,
+  "category": "Survival",
+  "level": "Intermediate",
+  "question_text": "Which predictors had the most missing data, and why?",
+  "expected_answer": "\"Bilirubin was missing for 48.7% of patients, pH for 36.1% and lactate for 31.4%. These tests are ordered when clinically indicated, not routinely. The vital signs and routine blood tests were almost complete, mostly below 3% missing.\"",
+  "tone": "Precise.",
+  "fallback_response": "Short answer.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 156,
+  "category": "Survival",
+  "level": "Intermediate",
+  "question_text": "Why median imputation for Cox and the random survival forest but not for XGBoost?",
+  "expected_answer": "\"Cox cannot fit with missing values, and the random survival forest implementation I used needs complete data. XGBoost learns a default direction for missing values at each split, so imputing would throw away that ability. Missing indicators give the other two models some of the same information.\"",
+  "tone": "Clear.",
+  "fallback_response": "Short answer.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 157,
+  "category": "Survival",
+  "level": "Intermediate",
+  "question_text": "Is death a competing risk for discharge home?",
+  "expected_answer": "\"Yes. I defined the secondary outcome only among patients who survived to discharge, so death is excluded rather than modelled. This answers whether a survivor goes home, not the probability of going home from admission. A competing risks analysis would be a reasonable extension.\"",
+  "tone": "Honest.",
+  "fallback_response": "\"I chose a simpler definition; competing risks would be the more complete approach.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 158,
+  "category": "Survival",
+  "level": "Intermediate",
+  "question_text": "Why define discharge home only among survivors?",
+  "expected_answer": "\"Because the question of whether a patient goes home only applies to patients alive at discharge. It also makes the outcome different from death, so it really tests whether the ranking holds for another outcome.\"",
+  "tone": "Brief.",
+  "fallback_response": "Short answer.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 159,
+  "category": "Survival",
+  "level": "Intermediate",
+  "question_text": "How did your earlier binary mortality results inform this study?",
+  "expected_answer": "\"In the legacy analysis, XGBoost had the best AUROC, about 0.91, and the three approaches performed almost the same within each method. That told me the predictors were strong and that differences between approaches might be small, so I needed a careful paired comparison with confidence intervals.\"",
+  "tone": "Reflective.",
+  "fallback_response": "\"That work is superseded, so I treat it only as background.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 160,
+  "category": "Survival",
+  "level": "Intermediate",
+  "question_text": "Which approach performed best for one-year survival?",
+  "expected_answer": "[Use your final result here] Structure: \"On the held-out group of NCD patients, [approach] had the highest C-index for [methods], [value] with 95% CI [range], compared with [values] for the others. The difference was [significant / not significant]. Calibration was [describe].\"",
+  "tone": "Direct. Lead with the answer, then the numbers.",
+  "fallback_response": "\"May I turn to Table 4.x so I give the exact figures?\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 161,
+  "category": "Survival",
+  "level": "Intermediate",
+  "question_text": "Were the differences between approaches clinically meaningful?",
+  "expected_answer": "[Use your final result here] Structure: \"The largest difference in C-index was [value]. In practice, [explain whether that changes risk ranking enough to matter]. Calibration differences were [describe], which matter more for individual estimates.\"",
+  "tone": "Balanced.",
+  "fallback_response": "\"Statistically they were [significant / not]; whether that matters clinically would need a decision analysis.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 162,
+  "category": "Survival",
+  "level": "Intermediate",
+  "question_text": "Did the ranking hold in the sensitivity analysis?",
+  "expected_answer": "[Use your final result here] Structure: \"Yes / partly. Under the first-three-diagnoses definition, with 40,733 NCD patients, the ranking was [same / different] because [reason].\"",
+  "tone": "Confident.",
+  "fallback_response": "\"The sensitivity results are in Section 4.x; I can show them.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 163,
+  "category": "Survival",
+  "level": "Intermediate",
+  "question_text": "Did the ranking hold for discharge home alive?",
+  "expected_answer": "[Use your final result here] Structure: \"For discharge home alive, [approach] performed best, which [agrees / disagrees] with the survival result. This suggests [interpretation].\"",
+  "tone": "Clear.",
+  "fallback_response": "\"May I refer to the secondary outcome table?\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 164,
+  "category": "Survival",
+  "level": "Intermediate",
+  "question_text": "How did the models perform within each NCD group?",
+  "expected_answer": "[Use your final result here] Structure: \"Within cardiovascular patients, results were close to the overall NCD result because they dominate the group. For cancer patients, [describe]. The chronic respiratory and diabetes groups had wide intervals, so I draw no firm conclusion for them.\"",
+  "tone": "Careful.",
+  "fallback_response": "\"The per-group results are in Table 4.x.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 165,
+  "category": "Survival",
+  "level": "Intermediate",
+  "question_text": "Which method performed best: Cox, random survival forest or XGBoost?",
+  "expected_answer": "[Use your final result here] Structure: \"[Method] performed best. This [agrees / contrasts] with Huang and colleagues, who found machine learning no better than Cox for cancer survival, and with Wang and colleagues, where the random survival forest beat Cox for stroke.\"",
+  "tone": "Balanced.",
+  "fallback_response": "\"The method ranking was secondary to the approach comparison, but here is what I found ...\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 166,
+  "category": "Survival",
+  "level": "Intermediate",
+  "question_text": "How does your C-index compare with published work?",
+  "expected_answer": "[Use your final result here] Structure: \"My best C-index was [value]. Wang and colleagues reported C-indices of about 0.79 on MIMIC-IV for 90-day mortality. Direct comparison is limited because cohorts, horizons and predictors differ.\"",
+  "tone": "Measured.",
+  "fallback_response": "\"I would be careful comparing directly, because the populations differ.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 167,
+  "category": "Survival",
+  "level": "Intermediate",
+  "question_text": "Why do you think transfer learning helped, or did not help?",
+  "expected_answer": "[Use your final result here] If it helped: \"The general model learnt patterns shared by all ICU patients from more data, and the adjustment corrected where NCD patients differ.\" If it did not: \"NCD patients are already 47% of the cohort, so the general model already learnt them well, leaving little to correct.\"",
+  "tone": "Thoughtful.",
+  "fallback_response": "\"That is my interpretation of the results; testing it would need further experiments.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 168,
+  "category": "Survival",
+  "level": "Intermediate",
+  "question_text": "Three quarters of patients are censored. Is that a problem?",
+  "expected_answer": "\"Not in itself. Here censoring is administrative at 365 days, not patients dropping out, and survival methods are built for it. The 25% who died still give about 16,000 events in the whole cohort, which is plenty. Heavy censoring does argue for checking Uno's C-index alongside Harrell's.\"",
+  "tone": "Confident.",
+  "fallback_response": "Short answer.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 169,
+  "category": "Survival",
+  "level": "Intermediate",
+  "question_text": "How did you handle patients who died within the first 24 hours?",
+  "expected_answer": "\"They stay in the cohort with whatever data they had before death, and their survival time is short. This is a deliberate choice, but it means the model partly predicts deaths that happen during the prediction window. An alternative is to exclude them and predict from the 24-hour mark.\"",
+  "tone": "Honest. This is a known design trade-off.",
+  "fallback_response": "\"I would like to check how many such patients there are; it is a fair point and could be a sensitivity analysis.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 170,
+  "category": "Survival",
+  "level": "Intermediate",
+  "question_text": "What is time zero in your survival analysis?",
+  "expected_answer": "\"Time zero is ICU admission, the same point at which the 24-hour predictor window starts. Survival time runs from the day of ICU admission to the date of death, or to 365 days for patients not known to have died. The date of death in MIMIC-IV has no time of day, so ICU admission is also taken at day level.\"",
+  "tone": "Precise. Name the variable if asked: intime in the icustays table.",
+  "fallback_response": "\"It is ICU admission; the definition is in cohort.py and in Section 3.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 171,
+  "category": "Survival",
+  "level": "Advanced",
+  "question_text": "Predictions are made at 24 hours but follow-up starts at admission. Is that consistent?",
+  "expected_answer": "\"Thank you, that is a sharp point. Strictly, a prediction made at 24 hours should start the clock at 24 hours, which is a landmark analysis, and exclude patients who died before then. Starting at admission includes early deaths, which may inflate performance slightly. The bias affects all approaches equally, so the comparison remains fair, but a landmark sensitivity analysis would settle it.\"",
+  "tone": "Thoughtful and non-defensive. Acknowledge it and explain the effect.",
+  "fallback_response": "\"I take the point; a landmark analysis would be the cleanest answer and I can add it.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 172,
+  "category": "Survival",
+  "level": "Advanced",
+  "question_text": "Treatment decisions such as withdrawal of care affect survival. How does that affect your model?",
+  "expected_answer": "\"The model predicts survival under the care patients actually received, including decisions to limit treatment. If clinicians limit care for patients with a poor outlook, the model learns that, and a new prediction could reinforce it. This is why the model should support, not drive, end-of-life decisions.\"",
+  "tone": "Serious.",
+  "fallback_response": "\"MIMIC-IV has limited data on code status in my predictor set, so I cannot adjust for it fully.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 173,
+  "category": "Survival",
+  "level": "Advanced",
+  "question_text": "Could a survival prediction become a self-fulfilling prophecy?",
+  "expected_answer": "\"Yes, that is a real ethical risk. If a low predicted survival leads to less aggressive care, the patient may die partly because of the prediction. Safeguards are showing uncertainty, using predictions to prompt discussion rather than decide, and monitoring outcomes after deployment.\"",
+  "tone": "Serious and reflective.",
+  "fallback_response": "\"It is one of the reasons I frame the work as decision support only.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 174,
+  "category": "Survival",
+  "level": "Advanced",
+  "question_text": "MIMIC-IV is from a US centre between about 2008 and 2019. Would a model trained there work in a Kenyan ICU?",
+  "expected_answer": "\"Not without validation. Patient age, disease mix, the stage at which patients reach the ICU, available tests and treatments all differ. The model would likely need recalibration at minimum. The design, however, transfers: a Kenyan hospital could run the same comparison, and transfer learning is in fact a way to adapt a model trained elsewhere to local data.\"",
+  "tone": "Honest and constructive.",
+  "fallback_response": "\"I have no Kenyan data to test this; it is the most important direction for future work.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 175,
+  "category": "Survival",
+  "level": "Advanced",
+  "question_text": "What would be needed to validate your approach in a Kenyan hospital?",
+  "expected_answer": "\"Electronic records with the same predictors from the first 24 hours, reliable diagnosis coding, and one-year follow-up for death, ideally linked to the civil registration system. Ethical approval and data governance agreements would come first. Even a few thousand patients would allow recalibration and a transfer learning adaptation.\"",
+  "tone": "Practical.",
+  "fallback_response": "\"I would need to learn more about local data systems before giving a firm plan.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 176,
+  "category": "Survival",
+  "level": "Advanced",
+  "question_text": "Could the general model win simply because it has more data?",
+  "expected_answer": "\"Yes, and that is partly the point: the trade-off between more data and more relevant data is exactly what I test. To separate the two, one could train the general model on a sample the same size as the NCD training set. I did / did not do that [state which]; if not, I would add it as a learning-curve analysis.\"",
+  "tone": "Thoughtful.",
+  "fallback_response": "\"A size-matched comparison would separate the effects; it is a good suggestion.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 177,
+  "category": "Survival",
+  "level": "Advanced",
+  "question_text": "Is NCD too broad a group for one disease-specific model?",
+  "expected_answer": "\"It is broad: cardiovascular disease, cancer, chronic respiratory disease and diabetes behave differently, as the Kaplan-Meier curves show. I used the WHO grouping because it matches how health systems plan, and because separate groups would be too small for chronic respiratory disease and diabetes. To check the cost of pooling, I report results for each group.\"",
+  "tone": "Balanced.",
+  "fallback_response": "\"The per-group results are my answer; separate models are future work.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 178,
+  "category": "Survival",
+  "level": "Advanced",
+  "question_text": "Why not build four separate disease models instead?",
+  "expected_answer": "\"Two of the four groups, with 464 and 963 patients, are too small for stable survival models with 69 predictors. A pooled NCD model is a fair middle ground. With more data, separate models per group would be the next step, and transfer learning would be the obvious way to build them.\"",
+  "tone": "Confident.",
+  "fallback_response": "Short answer.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 179,
+  "category": "Survival",
+  "level": "Advanced",
+  "question_text": "Is continuing to train XGBoost really transfer learning, or just more training?",
+  "expected_answer": "\"It is a simple form of transfer learning: the knowledge in the general model's trees is kept, and new trees learn only the corrections the NCD group needs. That is the same mechanism Xu and colleagues used. More advanced forms exist, such as domain adaptation, but this one is transparent and widely used.\"",
+  "tone": "Confident but open.",
+  "fallback_response": "\"Definitions vary; I follow the one used in the closest published work.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 180,
+  "category": "Survival",
+  "level": "Advanced",
+  "question_text": "Could domain adaptation or multi-task learning do better?",
+  "expected_answer": "\"Possibly. Multi-task learning could model all NCD groups and non-NCD patients together with shared and group-specific parts. Domain adaptation could reweight non-NCD patients by similarity. These are more complex and less established for survival data, so I chose the simpler method first.\"",
+  "tone": "Engaged.",
+  "fallback_response": "\"I have not tested them, so I would not claim they are better or worse.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 181,
+  "category": "Survival",
+  "level": "Advanced",
+  "question_text": "How does your study differ from Xu and colleagues (2025)?",
+  "expected_answer": "\"Xu and colleagues compared diagnosis-specific, pooled and transfer learning models on eICU, with a yes-or-no mortality outcome and single diagnoses. My study uses MIMIC-IV, treats NCDs as a combined group, uses a survival outcome with time-to-event metrics, and adds a random survival forest. Their paper is also still a preprint.\"",
+  "tone": "Precise.",
+  "fallback_response": "Short answer.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 182,
+  "category": "Survival",
+  "level": "Advanced",
+  "question_text": "Pfohl and colleagues found standard training on all data hard to beat. Does that contradict your study?",
+  "expected_answer": "\"It sets a strong prior that the general model will be hard to beat, which my design tests directly. Their methods aimed at worst-case subgroup performance, while transfer learning targets one known group. If my general model performs as well as the others, it agrees with them; if transfer learning wins, it shows targeted adaptation can help where methods aimed at worst-case groups did not. [State which.]\"",
+  "tone": "Thoughtful.",
+  "fallback_response": "\"Their setting differs, so I see it as context rather than contradiction.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 183,
+  "category": "Survival",
+  "level": "Advanced",
+  "question_text": "What if C-index differences are tiny but calibration differs?",
+  "expected_answer": "\"Then calibration should guide the choice, because individual survival estimates depend on it. Two models that rank patients equally well can give very different absolute risks. For NCD patients, a disease-specific or transfer learning model may calibrate better even when ranking is similar, which Xu and colleagues also observed.\"",
+  "tone": "Clear.",
+  "fallback_response": "Short answer.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 184,
+  "category": "Survival",
+  "level": "Advanced",
+  "question_text": "Is the 28-day AUC dominated by in-hospital deaths?",
+  "expected_answer": "\"Largely, yes. 13.5% died within 28 days and 10.8% died in hospital, so most early deaths happen before discharge. The 28-day AUC therefore mainly reflects acute severity, while the one-year AUC also captures deaths after discharge, which depend more on chronic disease. That is one reason to report several time points.\"",
+  "tone": "Numerate.",
+  "fallback_response": "Short answer.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 185,
+  "category": "Survival",
+  "level": "Advanced",
+  "question_text": "Why did you exclude diagnosis codes as predictors?",
+  "expected_answer": "\"They are assigned at discharge, so they would not be available at 24 hours. Including them would leak future information and overstate performance. The group label is used only to choose who goes into each model.\"",
+  "tone": "Firm.",
+  "fallback_response": "Short answer.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 186,
+  "category": "Survival",
+  "level": "Advanced",
+  "question_text": "Would a comorbidity index such as Charlson or Elixhauser improve the model?",
+  "expected_answer": "\"Probably, since comorbidity affects ICU survival, as Simpson and colleagues showed. But in MIMIC-IV these are usually built from discharge codes for the same admission, which would leak information. A version built only from previous admissions could be added without leakage.\"",
+  "tone": "Thoughtful.",
+  "fallback_response": "\"It is a good suggestion for future work, provided it uses only prior information.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 187,
+  "category": "Survival",
+  "level": "Advanced",
+  "question_text": "Using only the first stay throws away data. Why is that acceptable?",
+  "expected_answer": "\"Later stays would add data but break independence, and a patient on a second admission differs from one on a first. With over 65,000 first stays, the gain from extra stays is small compared with the risk of bias. It also makes the patient-level split simple.\"",
+  "tone": "Confident.",
+  "fallback_response": "Short answer.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 188,
+  "category": "Survival",
+  "level": "Advanced",
+  "question_text": "How did you handle the change from ICD-9 to ICD-10 coding?",
+  "expected_answer": "\"MIMIC-IV contains both, because US coding switched in 2015. I mapped each version to the four NCD groups separately using equivalent ranges. Small differences between the two systems could shift a few patients between groups, which the sensitivity analysis partly covers.\"",
+  "tone": "Precise.",
+  "fallback_response": "\"The mappings are not perfectly equivalent; I chose the closest standard ranges.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 189,
+  "category": "Survival",
+  "level": "Advanced",
+  "question_text": "How sensitive are your conclusions to the one-year horizon?",
+  "expected_answer": "\"The 28-day and 90-day AUCs give part of the answer, because they show whether the ranking changes over time. Refitting with a different horizon, such as 90 days, would be a full check. [State whether the ranking was consistent across time points.]\"",
+  "tone": "Balanced.",
+  "fallback_response": "\"I report multiple time points; a full refit at another horizon would be a further check.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 190,
+  "category": "Survival",
+  "level": "Advanced",
+  "question_text": "Who would use a one-year survival prediction made at 24 hours?",
+  "expected_answer": "\"Clinicians planning care and talking with families about expected outcomes, palliative care teams deciding who to see early, and hospital managers estimating follow-up needs. It is less useful for minute-by-minute ICU decisions, where severity scores and monitoring already serve.\"",
+  "tone": "Practical.",
+  "fallback_response": "\"The exact use case would be shaped with clinicians before any deployment.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 191,
+  "category": "Survival",
+  "level": "Advanced",
+  "question_text": "How did you check that continuous predictors have a linear effect in the Cox model?",
+  "expected_answer": "\"The standard Cox model assumes a linear effect on the log hazard. Checks include martingale residual plots or adding spline terms. [State what you did.] The tree methods do not need this assumption, which is part of why I compare them.\"",
+  "tone": "Honest.",
+  "fallback_response": "\"If I did not check this formally, I would say so and note the tree methods as the safeguard.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 192,
+  "category": "Survival",
+  "level": "Advanced",
+  "question_text": "How do you interpret Cox hazard ratios when missing indicators are included?",
+  "expected_answer": "\"With median imputation plus an indicator, the indicator's hazard ratio reflects the risk of not having the test, which often means the clinician was less worried. The predictor's own hazard ratio applies to patients with measured values. These coefficients are for prediction, not for causal interpretation.\"",
+  "tone": "Precise.",
+  "fallback_response": "\"I would be careful interpreting them individually; they serve prediction.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 193,
+  "category": "Survival",
+  "level": "Advanced",
+  "question_text": "If the general model wins, are disease-specific models useless?",
+  "expected_answer": "\"No. It would mean that for this population, with these predictors, a general model is enough. Disease-specific models may still help for small, very different groups, or where predictors are disease-specific, such as cancer stage. The conclusion is about this setting.\"",
+  "tone": "Balanced.",
+  "fallback_response": "Short answer.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 194,
+  "category": "Survival",
+  "level": "Advanced",
+  "question_text": "What gain would justify building a separate disease-specific model?",
+  "expected_answer": "\"A separate model costs effort to build, validate and maintain. I would want a gain that is both statistically clear and large enough to change decisions, for example better calibration at the risk levels where decisions are made. A C-index gain of a few thousandths would not justify it.\"",
+  "tone": "Thoughtful.",
+  "fallback_response": "\"There is no fixed threshold; I would decide it with clinical users.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 195,
+  "category": "Survival",
+  "level": "Advanced",
+  "question_text": "Would your conclusions change if you used eICU instead of MIMIC-IV?",
+  "expected_answer": "\"eICU covers over 200 US hospitals, so it has more variation between sites. The general model might benefit more from that variety, or transfer learning might help more because patients differ more. That is why eICU validation is my first suggestion for future work.\"",
+  "tone": "Open and curious.",
+  "fallback_response": "\"I cannot know without running it, which is exactly the point of external validation.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 196,
+  "category": "Survival",
+  "level": "Advanced",
+  "question_text": "Did you consider that the NCD group might change because coding practice differs between periods?",
+  "expected_answer": "\"Yes, coding depth can change over time and with the ICD version, which could shift who counts as an NCD patient. The random split spreads periods across training and test data, so it does not bias the comparison between approaches, but it could affect how the results transfer to other periods.\"",
+  "tone": "Calm.",
+  "fallback_response": "\"I did not test it by period; a temporal split would answer it.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 197,
+  "category": "Survival",
+  "level": "Advanced",
+  "question_text": "Could severity scores such as SOFA or SAPS II have been added as predictors?",
+  "expected_answer": "\"They could, but most of their components, such as blood pressure, creatinine, bilirubin and the Glasgow Coma Scale, are already among my predictors in raw form. Adding the scores would mostly repeat information. Using a score as a baseline comparator would be useful to show the gain over current practice.\"",
+  "tone": "Reasoned.",
+  "fallback_response": "\"A severity score baseline would be a useful addition to show the improvement over current practice.\"",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 198,
+  "category": "Survival",
+  "level": "Advanced",
+  "question_text": "How do you justify using one dataset for both choosing the approach and judging it?",
+  "expected_answer": "\"Choices were made with cross-validation inside the training data; judgement was made once on the held-out group of NCD patients. So selection and evaluation are separated. What one dataset cannot show is transportability, which needs external data.\"",
+  "tone": "Firm.",
+  "fallback_response": "Short answer.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 199,
+  "category": "Survival",
+  "level": "Advanced",
+  "question_text": "Your study is internal to one hospital. Why should anyone trust the ranking?",
+  "expected_answer": "\"Because the ranking comes from a fair, paired comparison on the same patients, and because I check it across three methods, two NCD definitions and two outcomes. A ranking that holds across all of these is unlikely to be chance. Whether it holds in other hospitals is an open question I state clearly.\"",
+  "tone": "Confident and composed.",
+  "fallback_response": "Short answer.",
+  "evaluation_criteria": ""
+ },
+ {
+  "number": 200,
+  "category": "Survival",
+  "level": "Advanced",
+  "question_text": "If you had to defend one design decision above all others, which would it be?",
+  "expected_answer": "\"Testing every model on the same held-out group of NCD patients. It is what makes the study a fair comparison. Without it, differences could come from different test sets rather than from the approaches. Everything else in the design follows from that decision.\"",
+  "tone": "Strong, final. Speak slowly.",
+  "fallback_response": "Rehearse this; it is a natural closing question.",
+  "evaluation_criteria": ""
+ }
+]
