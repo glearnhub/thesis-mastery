@@ -109,7 +109,19 @@ function questionBlock(q: Record<string, unknown>) {
     q.tone ? `TONE GUIDANCE: ${q.tone}` : "TONE GUIDANCE: none supplied",
     q.fallback_response ? `IF THE CANDIDATE DOES NOT KNOW (guidance): ${q.fallback_response}` : "",
     q.evaluation_criteria ? `EXTRA MARKING CRITERIA: ${q.evaluation_criteria}` : "",
+    keyPoints(q.marking_rules),
   ].filter(Boolean).join("\n\n");
+}
+
+// The rule-based key points double as a marking guide for the AI.
+// deno-lint-ignore no-explicit-any
+function keyPoints(rules: any) {
+  if (!rules || !Array.isArray(rules.points) || !rules.points.length) return "";
+  // deno-lint-ignore no-explicit-any
+  const lines: string[] = rules.points.map((p: any) => `- ${p.type === "B" ? "Supporting" : "Essential"}: ${p.label}`);
+  // deno-lint-ignore no-explicit-any
+  (rules.flags ?? []).forEach((f: any) => lines.push(`- Wrong if the answer says: ${f.explanation}`));
+  return `KEY POINTS (from the marking rules):\n${lines.join("\n")}`;
 }
 
 async function callClaude(userText: string, schema: Record<string, unknown>) {
@@ -156,7 +168,7 @@ Deno.serve(async (req) => {
 
     const { data: q, error: qError } = await admin
       .from("questions")
-      .select("id, number, level, question_text, expected_answer, tone, fallback_response, evaluation_criteria, categories(name)")
+      .select("id, number, level, question_text, expected_answer, tone, fallback_response, evaluation_criteria, marking_rules, categories(name)")
       .eq("id", question_id)
       .single();
     if (qError || !q) return json({ error: "Question not found." }, 404);

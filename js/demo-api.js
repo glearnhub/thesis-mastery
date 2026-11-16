@@ -1,14 +1,10 @@
 // Thesis Mastery DEMO data layer.
 // Same interface as api.js, but everything lives in this browser's
-// localStorage and answers are marked by a simple offline keyword checker,
-// not by the AI. Used when js/config.js has no Supabase keys, or with ?demo=1.
+// localStorage. Answers are marked by the same rule-based marker the live
+// app uses (js/marker.js). Used when js/config.js has no Supabase keys, or
+// with ?demo=1.
 (function () {
   const KEY = "tm_demo_v1";
-  const STOP = new Set(("about above after again against because been before being below between both could " +
-    "does doing down during each from further have having here into itself just more most other ought ourselves " +
-    "over same should some such than that their them themselves then there these they this those through under " +
-    "until very were what when where which while whom with would your yours yourself also only will shall said " +
-    "thank question professor answer think state study using used make made many much well like").split(" "));
 
   const load = () => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (_) { return {}; } };
   const save = (db) => { try { localStorage.setItem(KEY, JSON.stringify(db)); } catch (_) { /* storage full or blocked */ } };
@@ -39,9 +35,11 @@
     return u;
   }
 
+  const BANK_VERSION = 2; // 2 = questions carry marking_rules
+
   async function ensureBank() {
     const db = load();
-    if (db.questions && db.categories) return db;
+    if (db.questions && db.categories && db.bankVersion === BANK_VERSION) return db;
     const res = await fetch("data/questions.json");
     if (!res.ok) throw new Error("Could not load the question bank (data/questions.json).");
     const rows = await res.json();
@@ -56,7 +54,9 @@
       id: i + 1, category_id: names.indexOf(r.category) + 1, number: r.number, level: r.level,
       question_text: r.question_text, expected_answer: r.expected_answer, tone: r.tone,
       fallback_response: r.fallback_response, evaluation_criteria: r.evaluation_criteria || "",
+      marking_rules: r.marking_rules || null,
     }));
+    db.bankVersion = BANK_VERSION;
     db.nextQuestionId = db.questions.length + 1;
     db.nextCategoryId = db.categories.length + 1;
     db.progress = db.progress || {};
@@ -66,87 +66,11 @@
     return db;
   }
 
-  // ---------------- offline checker
-  const words = (t) => (t || "").toLowerCase().replace(/[^a-z0-9%.,\-\s]/g, " ").split(/\s+/)
-    .map((w) => w.replace(/^[.,\-]+|[.,\-]+$/g, "")).filter(Boolean);
-  const keywords = (t) => [...new Set(words(t).filter((w) => (w.length >= 5 && !STOP.has(w)) || /\d/.test(w)))];
-  const sentences = (t) => (t || "").replace(/^"|"$/g, "").replace(/\[[^\]]*\]/g, "").split(/(?<=[.?!])\s+/)
-    .map((s) => s.replace(/^"|"$/g, "").trim()).filter((s) => s.length > 12);
-  const stem = (w) => w.replace(/(ing|ed|es|s)$/, "");
-
-  function check(question, answer) {
-    const expectedKw = keywords(question.expected_answer);
-    const answerKw = new Set(keywords(answer).map(stem));
-    const matched = expectedKw.filter((k) => answerKw.has(stem(k)));
-    const coverage = expectedKw.length ? matched.length / expectedKw.length : 0;
-    const answerWords = words(answer).length;
-    const answerSentences = sentences(answer);
-
-    let verdict = "incorrect";
-    if (answerWords >= 8 && coverage >= 0.4) verdict = "correct";
-    else if (answerWords >= 5 && coverage >= 0.18) verdict = "partially_correct";
-
-    const avgLen = answerSentences.length ? answerWords / answerSentences.length : answerWords;
-    let communication = 55;
-    if (answerSentences.length >= 2) communication += 15;
-    if (avgLen >= 8 && avgLen <= 30) communication += 15;
-    if (/^(thank|that is|yes|good question)/i.test(answer.trim())) communication += 10;
-    communication = Math.min(100, communication);
-
-    const effective = answerSentences
-      .filter((s) => keywords(s).filter((k) => expectedKw.map(stem).includes(stem(k))).length >= 2)
-      .slice(0, 3).map((s) => (s.length > 140 ? s.slice(0, 137) + "..." : s));
-    const missing = sentences(question.expected_answer)
-      .filter((s) => keywords(s).filter((k) => answerKw.has(stem(k))).length === 0)
-      .slice(0, 4);
-    const wrong = [];
-    if (missing.length) wrong.push({ type: "missing", detail: `You left out ${missing.length} point(s) that the expected answer makes; see "Missing points".` });
-    if (answerSentences.length < 2 && answerWords > 0) wrong.push({ type: "structure", detail: "Your answer is a single sentence. Lead with the answer, then give the reason and the evidence." });
-    if (answerWords < 8) wrong.push({ type: "incorrect", detail: "The answer is too short to show the examiner that you understand the point." });
-
-    const pct = Math.round(coverage * 100);
-    const feedback = {
-      demo: true,
-      verdict,
-      accuracy_score: Math.min(100, Math.round(pct * 1.6)),
-      completeness_score: Math.min(100, Math.round(pct * 1.8)),
-      communication_score: communication,
-      overall_assessment:
-        `Demo checker (not AI): your answer used ${matched.length} of the ${expectedKw.length} key terms from the expected answer (${pct}%). ` +
-        (verdict === "correct" ? "That is enough coverage to count as correct in demo mode."
-          : verdict === "partially_correct" ? "Some key ideas are there, but important points are missing."
-          : "Too few of the key ideas are present."),
-      what_you_got_right: matched.length ? [`You used these key terms: ${matched.slice(0, 12).join(", ")}.`] : [],
-      effective_phrases: effective,
-      where_you_went_wrong: wrong,
-      missing_points: missing,
-      how_to_improve: "Compare your answer with the expected answer below. Open with a short courtesy, give the direct answer first, then the reason and one piece of evidence from your study.",
-      recommended_tone: question.tone || "Calm, confident and formal.",
-      key_vocabulary: expectedKw.filter((k) => !answerKw.has(stem(k))).slice(0, 10),
-      structure_tips: ["Courtesy line, one phrase only.", "Direct answer in one sentence.", "Reason, then evidence or a number from your study.", "Stop and let the examiner follow up."],
-      learning_explanation: "In demo mode the checker only counts key terms. Connect Supabase and the AI evaluator to get feedback on meaning, accuracy and tone.",
-    };
-    return feedback;
-  }
-
-  function lessonFor(q) {
-    const s = sentences(q.expected_answer);
-    return {
-      demo: true,
-      simple_explanation: "Demo mode (not AI): the expected answer is shown above. Read it once, then work through the points below in order.",
-      key_points: s.slice(0, 6),
-      structure: ["Start with a short courtesy such as \"Thank you for the question.\"", s[0] ? `Give the direct answer: ${s[0]}` : "Give the direct answer first.", "Add the reason and one piece of evidence.", "Finish in one sentence and stop."],
-      recommended_tone: q.tone || "Calm, confident and formal.",
-      key_vocabulary: keywords(q.expected_answer).slice(0, 12),
-      example_delivery: q.expected_answer,
-      common_mistakes: ["Starting with background instead of the answer.", "Reciting from memory word for word.", "Leaving out the number or example that proves the point."],
-    };
-  }
-
   const strip = (q) => ({ id: q.id, category_id: q.category_id, number: q.number, level: q.level, question_text: q.question_text });
 
   window.TMDemoApi = {
     mode: "demo",
+    marking: "rules",
 
     async getSession() { await ensureBank(); return currentSession(); },
     onAuthChange(cb) { listeners.push(cb); },
@@ -208,7 +132,7 @@
       const prior = db.attempts.find((a) => a.user_id === uid && a.client_request_id === clientRequestId);
       if (prior) return { attempt: prior, reference };
 
-      const fb = check(q, trimmed);
+      const fb = window.TMMarker.mark(q, trimmed);
       db.progress[uid] = db.progress[uid] || {};
       const p = db.progress[uid][questionId] || { question_id: questionId, total_attempts: 0, correct_attempts: 0 };
       p.total_attempts += 1;
@@ -218,7 +142,7 @@
       db.progress[uid][questionId] = p;
       const attempt = {
         id: db.nextAttemptId++, user_id: uid, question_id: questionId, client_request_id: clientRequestId,
-        submitted_answer: trimmed, verdict: fb.verdict, accuracy_score: fb.accuracy_score,
+        submitted_answer: trimmed, verdict: fb.verdict, marker: fb.marker, overridden: false, accuracy_score: fb.accuracy_score,
         completeness_score: fb.completeness_score, communication_score: fb.communication_score,
         tone_feedback: fb.recommended_tone, mistakes: fb.where_you_went_wrong, improvements: fb.missing_points,
         feedback: fb, correct_count_after: p.correct_attempts, total_count_after: p.total_attempts,
@@ -233,7 +157,21 @@
       const db = await ensureBank();
       const q = db.questions.find((x) => x.id === questionId);
       if (!q) throw new Error("Question not found.");
-      return { lesson: lessonFor(q), reference: { expected_answer: q.expected_answer, tone: q.tone, fallback_response: q.fallback_response } };
+      return { lesson: window.TMMarker.lesson(q), reference: { expected_answer: q.expected_answer, tone: q.tone, fallback_response: q.fallback_response } };
+    },
+
+    async overrideAttempt(attemptId) {
+      const db = await ensureBank(); const uid = me().id;
+      const a = db.attempts.find((x) => x.id === Number(attemptId) && x.user_id === uid);
+      if (!a) throw new Error("Attempt not found.");
+      if (a.verdict === "correct") return a;
+      const p = db.progress[uid][a.question_id];
+      p.correct_attempts += 1;
+      p.status = statusFor(p.correct_attempts);
+      Object.assign(a, { verdict: "correct", overridden: true, correct_count_after: p.correct_attempts, status_after: p.status });
+      a.feedback = { ...a.feedback, verdict: "correct" };
+      save(db);
+      return a;
     },
 
     // ---------------- admin
@@ -250,7 +188,8 @@
       const number = Number(q.number);
       if (db.questions.some((x) => x.number === number && x.id !== q.id)) throw new Error(`Question number ${number} is already used.`);
       const fields = { category_id: Number(q.category_id), number, level: q.level, question_text: q.question_text,
-        expected_answer: q.expected_answer, tone: q.tone, fallback_response: q.fallback_response, evaluation_criteria: q.evaluation_criteria };
+        expected_answer: q.expected_answer, tone: q.tone, fallback_response: q.fallback_response, evaluation_criteria: q.evaluation_criteria,
+        marking_rules: q.marking_rules || null };
       if (q.id) Object.assign(db.questions.find((x) => x.id === q.id), fields);
       else db.questions.push({ id: db.nextQuestionId++, ...fields });
       save(db);

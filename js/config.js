@@ -6,9 +6,14 @@
 // NEVER put the service-role key or the Anthropic API key here.
 //
 // While these are left as placeholders, the app runs in DEMO MODE: data is
-// kept in this browser only and answers are marked by a simple offline
-// checker instead of the AI. You can also force demo mode with ?demo=1.
+// kept in this browser only. You can also force demo mode with ?demo=1.
+//
+// MARKING chooses who marks answers:
+//   "rules" - the built-in rule-based marker (free, no API key, works offline)
+//   "ai"    - Claude, through the evaluate-answer Edge Function (needs the
+//             function deployed and ANTHROPIC_API_KEY set in Supabase)
 window.THESIS_MASTERY_CONFIG = {
   SUPABASE_URL: "YOUR_SUPABASE_URL",
   SUPABASE_ANON_KEY: "YOUR_SUPABASE_ANON_KEY",
+  MARKING: "rules",
 };

@@ -276,7 +276,7 @@
             <nav id="nav-mobile" class="mt-6 space-y-1 overflow-y-auto">${navHtml()}</nav>
           </div>
         </div>
-        ${isDemo ? `<div class="bg-amber-50 border-b border-amber-200 px-4 py-2 text-center text-xs text-amber-900">Demo mode: data stays in this browser and answers are marked by a simple offline checker, not the AI. Add your Supabase keys in <code>js/config.js</code> to go live.</div>` : ""}
+        ${isDemo ? `<div class="bg-amber-50 border-b border-amber-200 px-4 py-2 text-center text-xs text-amber-900">Demo mode: accounts and progress stay in this browser only. Add your Supabase keys in <code>js/config.js</code> to save them online.</div>` : ""}
         <main id="view" class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-6 lg:py-8"></main>
       </div>`;
     S.shell = true;
@@ -826,6 +826,7 @@
             <button data-retry class="${btn()} sm:flex-1">Try Again</button>
             ${queue.length > 1 && pos < queue.length - 1 ? `<button data-next2 class="${btn("secondary")} sm:flex-1">Next question ${icon("right", "w-4 h-4")}</button>` : ""}
           </div>
+          ${a.verdict !== "correct" && api.overrideAttempt ? `<div class="mt-3 text-right"><button data-override class="${btn("ghost")} text-xs">${icon("check", "w-4 h-4")} My answer was right: mark as correct</button></div>` : ""}
         </div>`;
       $("#feedback-area", main).innerHTML = renderFeedback(a, res.reference);
       $("[data-retry]", main).onclick = () => {
@@ -835,6 +836,28 @@
         window.scrollTo({ top: $("#answer-area", main).offsetTop - 80, behavior: "smooth" });
       };
       const n2 = $("[data-next2]", main); if (n2) n2.onclick = () => go(`/practice/${queue[pos + 1]}`);
+      const ov = $("[data-override]", main);
+      if (ov) ov.onclick = () => {
+        const m = openModal("Mark as correct?", `<p class="text-sm text-slate-600">Use this only when your answer really makes every essential point and the marker missed your wording. It adds one to your correct count for this question and cannot be undone.</p>
+          <div class="mt-5 flex justify-end gap-2"><button data-cancel class="${btn("ghost")}">Cancel</button><button data-confirm class="${btn()}">Mark as correct</button></div>`);
+        $("[data-cancel]", m.root).onclick = m.close;
+        $("[data-confirm]", m.root).onclick = async (e) => {
+          busy(e.currentTarget, true, "Saving…");
+          const before = prog(qid).status;
+          try {
+            const updated = await api.overrideAttempt(a.id);
+            m.close();
+            res.attempt = { ...a, ...updated };
+            await refreshProgress();
+            if (!alive()) return;
+            showFeedback(res);
+            updateCounts();
+            loadHistory();
+            const after = res.attempt.status_after;
+            toast(STATUS_ORDER.indexOf(after) > STATUS_ORDER.indexOf(before) ? `Marked correct. Question ${q.number} moved to ${STATUS[after].label}.` : "Marked correct.", "success");
+          } catch (err) { m.close(); toast(err.message, "error"); }
+        };
+      };
       drawCompare();
       $("#feedback-area", main).scrollIntoView({ behavior: "smooth", block: "start" });
     }
@@ -895,6 +918,21 @@
   const score = (label, v) => `<div><div class="flex justify-between text-xs mb-1"><span class="text-slate-500">${label}</span><span class="font-semibold">${v ?? "–"}${v != null ? "/100" : ""}</span></div>${progressBar(v || 0)}</div>`;
   const WRONG_LABEL = { incorrect: "Incorrect", missing: "Missing", misunderstanding: "Misunderstanding", structure: "Structure", wording_or_tone: "Wording or tone" };
 
+  function markerChip(a) {
+    const f = a.feedback || {};
+    const m = a.marker || f.marker || (api.marking === "ai" ? "ai" : "rules");
+    const label = { rules: "Rule-based marker", keywords: "Keyword check (no key points set)", ai: "AI feedback" }[m] || "Marked";
+    return `<span class="text-xs rounded-full bg-slate-100 text-slate-600 px-2 py-0.5">${label}</span>` +
+      (a.overridden ? `<span class="text-xs rounded-full bg-brand-100 text-brand-800 px-2 py-0.5">You marked this correct</span>` : "");
+  }
+  function pointsChecklist(f) {
+    if (!f.points || !f.points.length) return "";
+    return `<div class="rounded-xl bg-white/70 ring-1 ring-slate-100 p-4 mt-4"><p class="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Key points the examiner listens for</p>
+      <ul class="space-y-1.5">${f.points.map((pt) => `<li class="flex items-start gap-2 text-sm">
+        <span class="mt-0.5 shrink-0 grid place-items-center w-5 h-5 rounded-full ${pt.covered ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-600"}">${icon(pt.covered ? "check" : "x", "w-3 h-3")}</span>
+        <span class="${pt.covered ? "text-slate-700" : "text-slate-500"}">${esc(pt.label)}${pt.type === "B" ? ` <span class="text-xs text-slate-400">(supporting)</span>` : ` <span class="text-xs text-slate-400">(essential)</span>`}</span></li>`).join("")}</ul></div>`;
+  }
+
   function renderFeedback(a, reference = {}, { compact = false } = {}) {
     const f = a.feedback || {};
     const v = a.verdict;
@@ -903,9 +941,10 @@
     return `<div class="${compact ? "" : card + " p-6"} space-y-4">
       <div class="rounded-2xl bg-gradient-to-br ${headTone} to-white ring-1 ring-slate-100 p-5">
         <h3 class="flex items-center gap-2 font-bold text-slate-900 mb-3"><span class="grid place-items-center w-6 h-6 rounded-full bg-brand-700 text-white text-xs">1</span>Overall assessment</h3>
-        <div class="flex flex-wrap items-center gap-3">${verdictBadge(v, true)}${v === "correct" ? `<span class="text-sm text-emerald-700 font-semibold">+1 correct answer</span>` : `<span class="text-sm text-slate-500">Not counted towards mastery</span>`}${f.demo ? `<span class="text-xs rounded-full bg-amber-100 text-amber-900 px-2 py-0.5">Demo checker, not AI</span>` : ""}</div>
+        <div class="flex flex-wrap items-center gap-3">${verdictBadge(v, true)}${v === "correct" ? `<span class="text-sm text-emerald-700 font-semibold">+1 correct answer</span>` : `<span class="text-sm text-slate-500">Not counted towards mastery</span>`}${markerChip(a)}</div>
         <p class="mt-3 text-sm text-slate-700">${esc(f.overall_assessment || "")}</p>
         <div class="mt-4 grid sm:grid-cols-3 gap-4">${score("Accuracy", a.accuracy_score)}${score("Completeness", a.completeness_score)}${score("Communication", a.communication_score)}</div>
+        ${pointsChecklist(f)}
       </div>
       ${sectionBox(2, "What you got right",
         (listItems(f.what_you_got_right, "text-emerald-800") || `<p class="text-slate-500">Nothing in this answer matched the expected answer yet.</p>`) +
@@ -928,7 +967,7 @@
 
   function renderLesson(l, reference = {}, { compact = false } = {}) {
     return `<div class="${compact ? "" : card + " p-6"} space-y-4">
-      ${compact ? "" : `<div class="flex items-center gap-2"><span class="rounded-lg bg-brand-100 p-2 text-brand-700">${icon("book")}</span><h2 class="text-lg font-bold">Let's learn this one</h2>${l.demo ? `<span class="text-xs rounded-full bg-amber-100 text-amber-900 px-2 py-0.5">Demo, not AI</span>` : ""}</div>
+      ${compact ? "" : `<div class="flex items-center gap-2"><span class="rounded-lg bg-brand-100 p-2 text-brand-700">${icon("book")}</span><h2 class="text-lg font-bold">Let's learn this one</h2>${l.marker === "rules" ? `<span class="text-xs rounded-full bg-slate-100 text-slate-600 px-2 py-0.5">From the key points</span>` : ""}</div>
       <p class="text-sm text-slate-500">Viewing the answer does not count as an attempt.</p>`}
       ${sectionBox(1, "The expected answer", `<div class="prose-answer rounded-xl bg-brand-50/60 ring-1 ring-brand-100 p-4 text-slate-800">${esc(reference.expected_answer || "")}</div>`)}
       ${sectionBox(2, "In simple terms", `<p>${esc(l.simple_explanation || "")}</p>`)}
@@ -1149,17 +1188,40 @@
           <label class="block"><span class="text-sm font-medium text-slate-700">Level</span><select name="level" class="${input} mt-1.5">${["", "Basic", "Intermediate", "Advanced"].map((l) => `<option ${l === (q.level || "") ? "selected" : ""}>${l}</option>`).join("")}</select></label>
         </div>
         ${ta("Question", "question_text", 3, q.question_text)}
-        ${ta("Expected answer", "expected_answer", 7, q.expected_answer, "The authoritative answer the AI marks against.")}
+        ${ta("Expected answer", "expected_answer", 7, q.expected_answer, "The model answer shown after marking.")}
         ${ta("Tone", "tone", 2, q.tone)}
         ${ta("If you do not know", "fallback_response", 2, q.fallback_response)}
-        ${ta("Evaluation criteria (optional)", "evaluation_criteria", 2, q.evaluation_criteria, "Extra points the answer must cover.")}
+        ${ta("Evaluation criteria (optional)", "evaluation_criteria", 2, q.evaluation_criteria, "Extra notes for the AI marker, if you use it.")}
+        <label class="block"><span class="text-sm font-medium text-slate-700">Marking rules</span>
+          <span class="block text-xs text-slate-400">One per line. <code>E | label | phrase; phrase</code> essential point, <code>B | …</code> supporting point, <code>NUM | label</code> needs a number, <code>X | explanation | phrase; phrase</code> wrong statement, <code>MIN | 20</code> minimum words.</span>
+          <textarea name="marking_rules" rows="7" class="${input} mt-1.5 font-mono text-xs">${esc(window.TMMarker.serializeRules(window.TMMarker.coerceRules(q.marking_rules)))}</textarea></label>
+        <div class="rounded-xl bg-slate-50 ring-1 ring-slate-100 p-4 space-y-2">
+          <p class="text-sm font-semibold text-slate-700">Test the rules</p>
+          <textarea data-test-answer rows="3" class="${input} text-sm" placeholder="Type a sample answer to see how it would be marked"></textarea>
+          <div class="flex items-center gap-2"><button type="button" data-test-run class="${btn("secondary")}">Mark this answer</button><button type="button" data-test-expected class="${btn("ghost")}">Try the expected answer</button></div>
+          <div data-test-out class="text-sm"></div>
+        </div>
         <div class="flex justify-end gap-2"><button type="button" data-cancel class="${btn("ghost")}">Cancel</button><button class="${btn()}" type="submit">Save question</button></div></form>`, { wide: true });
       const form = $("form", m.root);
       $("[data-cancel]", m.root).onclick = m.close;
+      const runTest = (answer) => {
+        const out = $("[data-test-out]", m.root);
+        const parsed = window.TMMarker.parseRules(form.marking_rules.value);
+        if (parsed.errors.length) { out.innerHTML = `<p class="text-red-700">${parsed.errors.map(esc).join("<br>")}</p>`; return; }
+        const r = window.TMMarker.mark({ expected_answer: form.expected_answer.value, tone: form.tone.value, marking_rules: parsed.rules.points.length ? parsed.rules : null }, answer);
+        out.innerHTML = `<div class="flex items-center gap-2 mb-1">${verdictBadge(r.verdict)}<span class="text-xs text-slate-500">Accuracy ${r.accuracy_score} · Completeness ${r.completeness_score} · Communication ${r.communication_score}</span></div>
+          <ul class="text-xs space-y-0.5">${r.points.map((pt) => `<li>${pt.covered ? "✓" : "✗"} ${esc(pt.label)}${pt.type === "B" ? " (supporting)" : ""}</li>`).join("")}</ul>
+          ${r.where_you_went_wrong.filter((w) => w.type === "misunderstanding").map((w) => `<p class="text-xs text-red-700 mt-1">${esc(w.detail)}</p>`).join("")}`;
+      };
+      $("[data-test-run]", m.root).onclick = () => runTest($("[data-test-answer]", m.root).value);
+      $("[data-test-expected]", m.root).onclick = () => runTest(form.expected_answer.value);
       form.onsubmit = async (e) => {
         e.preventDefault();
         const data = Object.fromEntries(new FormData(form).entries());
         if (!data.number || !data.question_text.trim() || !data.expected_answer.trim()) return showFormError(form, "Number, question and expected answer are required.");
+        const parsed = window.TMMarker.parseRules(data.marking_rules);
+        if (parsed.errors.length) return showFormError(form, "Marking rules: " + parsed.errors.join(" "));
+        data.marking_rules = parsed.rules.points.length ? parsed.rules : null;
         const b = $("button[type=submit]", form); busy(b, true, "Saving…");
         try { await api.saveQuestion({ ...data, id: q.id }); m.close(); toast("Question saved.", "success"); await reload(); }
         catch (err) { showFormError(form, err.message); busy(b, false); }
@@ -1170,7 +1232,7 @@
       body.innerHTML = `<div class="grid lg:grid-cols-2 gap-6">
         <div class="${card} p-6 space-y-4">
           <h2 class="font-bold flex items-center gap-2">${icon("upload", "w-5 h-5 text-brand-700")} Bulk import</h2>
-          <p class="text-sm text-slate-600">Upload a CSV or Excel file. Columns: <code>number</code>, <code>category</code> (name), <code>level</code>, <code>question_text</code>, <code>expected_answer</code>, <code>tone</code>, <code>fallback_response</code>, <code>evaluation_criteria</code>. Rows with an existing number update that question; new numbers are added. Missing numbers are assigned automatically.</p>
+          <p class="text-sm text-slate-600">Upload a CSV or Excel file. Columns: <code>number</code>, <code>category</code> (name), <code>level</code>, <code>question_text</code>, <code>expected_answer</code>, <code>tone</code>, <code>fallback_response</code>, <code>evaluation_criteria</code>, <code>marking_rules</code> (one rule per line, as in the question editor). Rows with an existing number update that question; new numbers are added. Missing numbers are assigned automatically.</p>
           <input type="file" id="imp-file" accept=".csv,.xlsx,.xls" class="block w-full text-sm file:mr-3 file:rounded-lg file:border-0 file:bg-brand-50 file:px-4 file:py-2 file:font-semibold file:text-brand-700 hover:file:bg-brand-100"/>
           <div id="imp-preview"></div>
         </div>
@@ -1180,7 +1242,7 @@
           <button data-export class="${btn("secondary")}">${icon("download", "w-4 h-4")} Download CSV (${full.length} questions)</button>
         </div></div>`;
       $("[data-export]", body).onclick = () => {
-        const rows = full.map((q) => ({ number: q.number, category: catById(q.category_id).name, level: q.level || "", question_text: q.question_text, expected_answer: q.expected_answer, tone: q.tone || "", fallback_response: q.fallback_response || "", evaluation_criteria: q.evaluation_criteria || "" }));
+        const rows = full.map((q) => ({ number: q.number, category: catById(q.category_id).name, level: q.level || "", question_text: q.question_text, expected_answer: q.expected_answer, tone: q.tone || "", fallback_response: q.fallback_response || "", evaluation_criteria: q.evaluation_criteria || "", marking_rules: window.TMMarker.serializeRules(window.TMMarker.coerceRules(q.marking_rules)) }));
         const ws = XLSX.utils.json_to_sheet(rows);
         const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "questions");
         XLSX.writeFile(wb, "thesis-mastery-questions.csv", { bookType: "csv" });
@@ -1212,7 +1274,7 @@
 
     function parseImport(raw) {
       const norm = (k) => String(k).trim().toLowerCase().replace(/[^a-z]+/g, "_").replace(/^_|_$/g, "");
-      const alias = { question: "question_text", text: "question_text", answer: "expected_answer", expected: "expected_answer", category_name: "category", if_you_do_not_know: "fallback_response", fallback: "fallback_response", criteria: "evaluation_criteria", no: "number", q: "number" };
+      const alias = { question: "question_text", text: "question_text", answer: "expected_answer", expected: "expected_answer", category_name: "category", if_you_do_not_know: "fallback_response", fallback: "fallback_response", criteria: "evaluation_criteria", rules: "marking_rules", key_points: "marking_rules", no: "number", q: "number" };
       const errors = [], rows = [];
       let nextNumber = Math.max(0, ...full.map((q) => q.number));
       const used = new Set();
@@ -1229,7 +1291,13 @@
         if (!number) number = ++nextNumber;
         if (used.has(number)) return errors.push(`${line}: number ${number} appears twice in the file`);
         used.add(number);
-        rows.push({ number, category_id: catId, level: o.level || null, question_text: String(o.question_text), expected_answer: String(o.expected_answer),
+        let rules = null;
+        if (o.marking_rules) {
+          const parsed = window.TMMarker.parseRules(String(o.marking_rules).replace(/\s\|\|\s/g, "\n"));
+          if (parsed.errors.length) return errors.push(`${line}: marking_rules - ${parsed.errors[0]}`);
+          rules = parsed.rules.points.length ? parsed.rules : null;
+        }
+        rows.push({ marking_rules: rules, number, category_id: catId, level: o.level || null, question_text: String(o.question_text), expected_answer: String(o.expected_answer),
           tone: o.tone ? String(o.tone) : null, fallback_response: o.fallback_response ? String(o.fallback_response) : null, evaluation_criteria: o.evaluation_criteria ? String(o.evaluation_criteria) : null });
       });
       return { rows, errors };

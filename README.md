@@ -1,21 +1,24 @@
 # Thesis Mastery
 
-A web app for practising the 200 defence questions with AI feedback. You type an answer. Claude marks it against the stored expected answer and explains what you got right, what you missed, and how to say it better. Every question then climbs from Good Start to Good Progress to Mastered.
+A web app for practising the 200 defence questions. You type an answer, and the app marks it against the key points of the stored expected answer. It tells you what you covered, what you missed and how to say it better. Every question then climbs from Good Start to Good Progress to Mastered.
+
+Marking is **rule-based by default**: free, instant, and no API key needed. AI marking with Claude is an optional extra.
 
 | Part | Where |
 |---|---|
 | Frontend (HTML, Tailwind, JavaScript) | `index.html`, `css/`, `js/` |
-| Database schema, Row Level Security, functions | `supabase/migrations/001_schema.sql` |
-| The 200 questions | `supabase/seed/002_questions.sql` (also `data/questions.csv` and `data/questions.json`) |
-| AI evaluation (Supabase Edge Function) | `supabase/functions/evaluate-answer/index.ts` |
-| Seed generator | `scripts/build_seed.py` |
+| Rule-based marker | `js/marker.js` |
+| Database schema, Row Level Security, functions | `supabase/migrations/001_schema.sql`, `002_rule_marking.sql` |
+| The 200 questions with their marking rules | `supabase/seed/questions.sql` (also `data/questions.csv` and `data/questions.json`) |
+| Optional AI marking (Supabase Edge Function) | `supabase/functions/evaluate-answer/index.ts` |
+| Question and rule sources, seed generator, rule tests | `scripts/` |
 
 ## Try it now (demo mode)
 
 The app works before any setup. While `js/config.js` still holds the placeholder keys, it runs in **demo mode**:
 
 - Accounts and progress are saved in your browser only.
-- Answers are marked by a simple offline keyword checker, not the AI. The feedback is labelled "Demo checker, not AI".
+- Answers are marked by the same rule-based marker as the live app.
 - The first account you create is made an administrator, so you can try the Admin screens.
 
 Serve the folder and open it in a browser:
@@ -34,54 +37,26 @@ Then open http://localhost:8080. Opening `index.html` straight from disk will no
 
 ### 1. Create the Supabase project
 
-1. Sign up at https://supabase.com and create a new project. Note the database password.
-2. Open **SQL Editor** and run the whole of `supabase/migrations/001_schema.sql`. This creates:
-   - the tables;
-   - the security policies;
-   - the `record_attempt` function, which updates progress counts atomically;
-   - the three categories.
-3. In the SQL Editor, run `supabase/seed/002_questions.sql`. This loads the 200 questions with their expected answers, tone and "if you do not know" guidance. Running it again is safe: it updates existing questions in place.
+1. Sign up at https://supabase.com and create a new project.
+2. Open **SQL Editor** and run these three files in this order, each as its own query:
+   1. `supabase/migrations/001_schema.sql`: the tables, security policies, progress functions and the three categories.
+   2. `supabase/migrations/002_rule_marking.sql`: the marking-rules column and the functions that save rule-marked attempts and "mark as correct".
+   3. `supabase/seed/questions.sql`: the 200 questions with expected answers, tone, "if you do not know" guidance and marking rules.
+
+Running any of them again is safe.
+
+**If you already ran an older setup:** if you loaded `001_schema.sql` and the old `002_questions.sql` before, just run `002_rule_marking.sql` and then `questions.sql`. Your existing progress is kept.
 
 ### 2. Configure authentication
 
 In **Authentication -> URL Configuration**:
 
-- Set **Site URL** to where the app will live, for example `https://thesis-mastery.netlify.app`.
-- Under **Redirect URLs**, add that address and `http://localhost:8080` for local testing.
+- Set **Site URL** to where the app will live, for example `https://thesis-mastery.vercel.app`.
+- Under **Redirect URLs**, add that address followed by `/**`, and also `http://localhost:8080/**` for local testing.
 
 Password-reset and confirmation emails return to these addresses. Email confirmation is on by default (**Authentication -> Providers -> Email**). Turn it off if you want accounts to work straight away.
 
-### 3. Deploy the AI evaluation function
-
-Install the Supabase CLI (https://supabase.com/docs/guides/cli), then from the `thesis-mastery` folder:
-
-```bash
-supabase login
-```
-
-```bash
-supabase link --project-ref YOUR_PROJECT_REF
-```
-
-```bash
-supabase secrets set ANTHROPIC_API_KEY=your-anthropic-api-key
-```
-
-```bash
-supabase functions deploy evaluate-answer
-```
-
-Get an Anthropic API key at https://console.anthropic.com. The key only ever lives in Supabase's secret store and is never sent to the browser.
-
-The function uses Claude Opus 5.5 (`claude-opus-5-5`) at medium effort. To use a different model, set it as a secret, for example:
-
-```bash
-supabase secrets set CLAUDE_MODEL=claude-sonnet-5-5
-```
-
-Server-side refusal fallback is switched on (`fallbacks: "default"`). If Claude declines a request, the API retries it on a fallback model automatically, so a refusal rarely reaches the user.
-
-### 4. Point the frontend at your project
+### 3. Point the frontend at your project
 
 In **Project Settings -> API**, copy the **Project URL** and the **anon public** key into `js/config.js`:
 
@@ -89,12 +64,13 @@ In **Project Settings -> API**, copy the **Project URL** and the **anon public**
 window.THESIS_MASTERY_CONFIG = {
   SUPABASE_URL: "https://abcd1234.supabase.co",
   SUPABASE_ANON_KEY: "eyJhbGciOi...",
+  MARKING: "rules",
 };
 ```
 
-The anon key is safe in frontend code, because Row Level Security decides what it can do. Never put the service-role key or the Anthropic key in this file.
+The anon key is safe in frontend code, because Row Level Security decides what it can do. Never put the service-role key or an Anthropic key in this file.
 
-### 5. Make yourself an administrator
+### 4. Make yourself an administrator
 
 Register in the app, then run this in the SQL Editor:
 
@@ -104,30 +80,154 @@ update public.profiles set role = 'admin' where email = 'you@example.com';
 
 Sign out and back in. An **Admin** item appears in the menu.
 
-### 6. Host it
+### 5. Host it
 
 The frontend is static files, so any static host works:
 
-- **Netlify:** drag the `thesis-mastery` folder onto https://app.netlify.com/drop.
-- **Vercel:** import the `glearnhub/thesis-mastery` repository, set **Framework Preset** to **Other**, and leave the root directory, build command and output directory at their defaults. Or run `vercel` inside the folder.
-- **GitHub Pages:** publish the folder from a repository.
+- **Vercel:** import the `glearnhub/thesis-mastery` repository and set **Framework Preset** to **Other**. Leave the root directory, build command and output directory at their defaults.
+- **Netlify:** drag the folder onto https://app.netlify.com/drop.
+- **GitHub Pages:** publish the repository root.
 
 Add the hosted address to Supabase's redirect URLs (step 2).
 
-## How it works
+## How the rule-based marker works
 
-**Marking.** The browser sends your answer to the `evaluate-answer` function, together with your login token. The function:
+Each question has a short list of **key points**, written from its expected answer:
 
-1. checks the token;
-2. reads the question and its expected answer;
-3. asks Claude for structured feedback against that answer;
-4. saves the attempt through `record_attempt`.
+- **Essential points:** all of them must be in your answer for it to count as Correct.
+- **Supporting points:** they raise your completeness score but are not required.
+- **Red flags:** common wrong statements, such as "censored means they died". If your answer contains one, it is marked Incorrect. A red flag is ignored when "not", "no", "never" or "without" comes just before it.
+- **A minimum length:** a very short answer cannot be Correct.
 
-Users cannot write to their progress tables directly, so nobody can mark their own answer correct from the browser.
+Each point lists the phrases that count as making it. Matching ignores:
+
+- capital letters;
+- small words (the, a, of …);
+- word endings (censor, censored and censoring all match);
+- British and American spelling;
+- number words, so "one year" matches "1 year".
+
+A phrase still matches with a couple of extra words in between.
+
+**Verdicts**
+
+| Verdict | When |
+|---|---|
+| Correct | Every essential point is covered, there is no red flag, and the answer is long enough. Adds one to the question's correct count. |
+| Partially Correct | Some essential points are covered. |
+| Incorrect | No essential points are covered, a red flag appears, or the answer is too thin. |
+
+The feedback also checks how you said it:
+
+- whether you open with a courtesy and lead with the answer;
+- sentence length;
+- hedging words such as "maybe" and "I guess";
+- an answer much longer than it needs to be.
+
+**Mark as correct.** No rule list covers every way of saying something. If your answer was right but the marker missed your wording, press **My answer was right: mark as correct** under the answer. It adds one to the correct count, once per attempt. Use it honestly: it only affects your own progress.
+
+**Teach Me** shows the expected answer, the key points it must contain, the order to say them in, the tone and the common mistakes. It is never recorded as an attempt.
+
+## Editing questions and rules
+
+**In the app (administrators):**
+
+- **Admin -> Questions:** add, edit or delete a question. The editor has a **Marking rules** box and a **Test the rules** panel. Type a sample answer, or press **Try the expected answer**, to see how it would be marked before you save.
+- **Admin -> Import & export:** upload a CSV or Excel file in the format of `data/questions.csv`, including a `marking_rules` column, or download the current bank.
+
+**Rule format.** Write one rule per line:
+
+```text
+E   | The exact event time is unknown | do not know; unknown; exact event time
+B   | In your study, censored at 365 days | 365
+NUM | Gives the actual value from your results
+X   | Censored does not mean the patient died | censored means they died
+MIN | 15
+```
+
+- `E` is an essential point. `B` is a supporting point.
+- `NUM` means the answer must contain a number. It counts as essential.
+- `X` is a red flag.
+- `MIN` sets the minimum number of words.
+
+**From the source files.** The questions live in `scripts/source/qa_*.py` and the rules in `scripts/source/rules_*.py`. After editing them, run these three commands:
+
+Rebuild the seed files:
+
+```bash
+python scripts/build_seed.py
+```
+
+Check that every expected answer still marks Correct and that nonsense answers mark Incorrect:
+
+```bash
+node scripts/test_rules.js
+```
+
+Check that each question's rules do not accept other questions' answers:
+
+```bash
+node scripts/cross_check.js
+```
+
+Then run `supabase/seed/questions.sql` again in the SQL Editor.
+
+Three questions (160, 161, 163) have expected answers that are templates for your final results, such as "[Use your final result here]". The tests skip them. Once your results are in, update those expected answers and their rules.
+
+## Optional: AI marking with Claude
+
+AI marking judges meaning rather than phrases, and gives richer feedback on wording and tone. The AI also sees each question's key points. It costs money per answer: roughly 3 to 8 US cents per click with Claude Opus 5.5 at medium effort, by estimate. Check the Anthropic Console for real figures.
+
+To switch it on:
+
+1. Get an API key at https://console.anthropic.com.
+2. Deploy the function from this folder with the Supabase CLI. No install is needed, because `npx` comes with Node.js.
+
+Log in:
+
+```bash
+npx supabase@latest login
+```
+
+Create the CLI settings file:
+
+```bash
+npx supabase@latest init
+```
+
+Link the folder to your project:
+
+```bash
+npx supabase@latest link --project-ref YOUR_REF
+```
+
+Store your API key on Supabase's server:
+
+```bash
+npx supabase@latest secrets set ANTHROPIC_API_KEY=sk-ant-your-key
+```
+
+Deploy the function:
+
+```bash
+npx supabase@latest functions deploy evaluate-answer
+```
+
+If it says Docker is not running, add `--use-api` to the end of the last command.
+
+3. In `js/config.js`, set `MARKING: "ai"`.
+
+The key stays in Supabase's secret store and never reaches the browser.
+
+- **Model:** the function uses `claude-opus-5-5`. To change it, run `npx supabase@latest secrets set CLAUDE_MODEL=claude-sonnet-5-5`.
+- **Refusals:** server-side refusal fallback is on, so a declined request is retried on a fallback model.
+- **Saving results:** with AI marking, attempts are saved by the server only.
+
+## Other details
 
 **Repeated clicks.** Each answer carries a request id. If the same answer is submitted twice, through a double click or a retry after a network drop, the second request returns the first result and does not count again.
 
-**Mastery.** Only answers marked **Correct** add to a question's correct count:
+**Mastery.** Only answers marked Correct add to a question's correct count:
 
 | Correct answers | Status |
 |---|---|
@@ -138,23 +238,6 @@ Users cannot write to their progress tables directly, so nobody can mark their o
 
 The count never goes down, so a mastered question stays mastered. Category progress counts only mastered questions.
 
-**Teach Me.** This shows the expected answer and a simple lesson. It is never recorded as an attempt.
+**Drafts.** The answer box saves a draft as you type. If saving fails, your answer stays in the box.
 
-**Drafts.** The answer box saves a draft as you type. If the AI call fails, your answer stays in the box.
-
-## Editing the questions
-
-You can change questions in two ways:
-
-- **In the app.** Go to **Admin -> Questions** to add, edit or delete a question. Go to **Admin -> Import & export** to upload a CSV or Excel file in the format of `data/questions.csv`, or to download the current bank.
-- **From the source files.** Edit `scripts/source/qa_*.py`, then rebuild the seed files:
-
-```bash
-python scripts/build_seed.py
-```
-
-Then run `supabase/seed/002_questions.sql` again in the SQL Editor.
-
-## Costs
-
-Each Check My Response or Teach Me click is one Claude API call. With Opus 5.5 at medium effort, a typical evaluation reads about 2,000–3,000 tokens and writes a few thousand, including thinking. That comes to roughly 3 to 8 US cents per click; check the usage page in the Anthropic Console for real figures. Switching `CLAUDE_MODEL` to `claude-sonnet-5-5` halves the cost.
+**Security.** Every user sees only their own attempts and progress. With rule-based marking the browser marks the answer, so a determined user could fake their own results. That only affects their own practice record. Questions and rules can be changed only by administrators.
