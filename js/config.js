@@ -13,7 +13,7 @@
 //   "ai"    - Claude, through the evaluate-answer Edge Function (needs the
 //             function deployed and ANTHROPIC_API_KEY set in Supabase)
 window.THESIS_MASTERY_CONFIG = {
-  SUPABASE_URL: "YOUR_SUPABASE_URL",
-  SUPABASE_ANON_KEY: "YOUR_SUPABASE_ANON_KEY",
+  SUPABASE_URL: "https://euegopazzskxfyrsoxit.supabase.co",
+  SUPABASE_ANON_KEY: "sb_publishable_s6rhtocjXAozNmidQPuw2w_-2PhqLZ7",
   MARKING: "rules",
 };
