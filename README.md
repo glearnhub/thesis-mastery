@@ -109,7 +109,7 @@ Sign out and back in. An **Admin** item appears in the menu.
 The frontend is static files, so any static host works:
 
 - **Netlify:** drag the `thesis-mastery` folder onto https://app.netlify.com/drop.
-- **Vercel:** run `vercel` inside the folder, or import the repository and set the root directory to `thesis-mastery`.
+- **Vercel:** import the `glearnhub/thesis-mastery` repository, set **Framework Preset** to **Other**, and leave the root directory, build command and output directory at their defaults. Or run `vercel` inside the folder.
 - **GitHub Pages:** publish the folder from a repository.
 
 Add the hosted address to Supabase's redirect URLs (step 2).
