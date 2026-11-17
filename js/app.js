@@ -3,6 +3,7 @@
   "use strict";
 
   const api = window.TMSupabaseApi || window.TMDemoApi;
+  const COPYRIGHT = `© ${new Date().getFullYear()} Gideon Kiplangat. All rights reserved.`;
   const isDemo = api.mode === "demo";
 
   // ------------------------------------------------------------------ state
@@ -278,6 +279,7 @@
         </div>
         ${isDemo ? `<div class="bg-amber-50 border-b border-amber-200 px-4 py-2 text-center text-xs text-amber-900">Demo mode: accounts and progress stay in this browser only. Add your Supabase keys in <code>js/config.js</code> to save them online.</div>` : ""}
         <main id="view" class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-6 lg:py-8"></main>
+        <footer class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 pb-8 text-center text-xs text-slate-400">${COPYRIGHT}</footer>
       </div>`;
     S.shell = true;
     $("#drawer-open").onclick = () => $("#drawer").classList.remove("hidden");
@@ -326,6 +328,7 @@
           <p class="text-slate-500 mt-1 mb-6 text-sm">${subtitle}</p>
           ${isDemo ? `<div class="mb-5 rounded-xl bg-amber-50 ring-1 ring-amber-200 px-4 py-3 text-xs text-amber-900">Demo mode: accounts and progress are stored only in this browser. The first account you create is an administrator.</div>` : ""}
           ${body}
+          <p class="mt-10 text-center text-xs text-slate-400">${COPYRIGHT}</p>
         </div>
       </div>
     </div>`;

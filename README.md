@@ -241,3 +241,7 @@ The count never goes down, so a mastered question stays mastered. Category progr
 **Drafts.** The answer box saves a draft as you type. If saving fails, your answer stays in the box.
 
 **Security.** Every user sees only their own attempts and progress. With rule-based marking the browser marks the answer, so a determined user could fake their own results. That only affects their own practice record. Questions and rules can be changed only by administrators.
+
+## Copyright
+
+© 2026 Gideon Kiplangat. All rights reserved. See [LICENSE](LICENSE).
